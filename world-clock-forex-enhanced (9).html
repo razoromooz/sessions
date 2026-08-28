@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساعت جهانی - فارکس</title>
+
+<!-- ============================================================
+     PROTECTION LAYER — discourages casual source viewing
+     (Note: nothing client-side is 100% unbreakable; this just
+     raises the bar for non-technical users)
+     ============================================================ -->
+<script>
+(function () {
+    'use strict';
+
+    // 1) Disable right-click context menu
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // 2) Block common dev-tools keyboard shortcuts:
+    //    F12, Ctrl+Shift+I/J/C, Ctrl+U (view source), Ctrl+S (save)
+    document.addEventListener('keydown', function (e) {
+        var k = e.key || e.keyCode;
+        // F12
+        if (k === 'F12' || k === 123) { e.preventDefault(); return false; }
+        // Ctrl+Shift+I / J / C  (dev tools / console / inspector)
+        if (e.ctrlKey && e.shiftKey && (k === 'I' || k === 'J' || k === 'C' || k === 73 || k === 74 || k === 67)) {
+            e.preventDefault(); return false;
+        }
+        // Ctrl+U  (view source)
+        if (e.ctrlKey && (k === 'U' || k === 85)) { e.preventDefault(); return false; }
+        // Ctrl+S  (save page)
+        if (e.ctrlKey && (k === 'S' || k === 83)) { e.preventDefault(); return false; }
+    });
+
+    // 3) Detect when user selects text and clear the selection periodically
+    //    (makes copy-paste of content harder)
+    document.addEventListener('copy', function (e) {
+        e.preventDefault();
+        if (e.clipboardData) {
+            e.clipboardData.setData('text/plain', 'کپی کردن محتوای این سایت مجاز نیست.');
+        }
+        return false;
+    });
+    document.addEventListener('cut', function (e) { e.preventDefault(); return false; });
+
+    // 4) Detect dev-tools opening via window-size delta (heuristic).
+    //    When dev tools dock, the inner window shrinks noticeably.
+    var threshold = 160;
+    var w0 = window.outerWidth - window.innerWidth;
+    var h0 = window.outerHeight - window.innerHeight;
+    setInterval(function () {
+        var wD = window.outerWidth - window.innerWidth;
+        var hD = window.outerHeight - window.innerHeight;
+        if (wD > threshold || hD > threshold) {
+            // Dev tools likely open — redirect the page away from source
+            // (use document.write to blank the page; safer than redirect loop)
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:Vazirmatn,sans-serif;color:#64748b;text-align:center;padding:20px;"><div><div style="font-size:48px;margin-bottom:16px;">🔒</div><h2 style="font-size:20px;margin-bottom:8px;">دسترسی غیرمجاز</h2><p style="font-size:14px;">برای مشاهده محتوای سایت لطفاً ابزارهای توسعه‌دهنده را ببندید.</p></div></div>';
+        }
+    }, 1000);
+
+    // 5) Clear console on load and periodically (makes console inspection harder)
+    setInterval(function () {
+        try { console.clear(); } catch (_) {}
+    }, 3000);
+})();
+</script>
+
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+:root {
+    --primary-color: #4c1d95;
+    --secondary-color: #6366f1;
+    --accent-color: #ff4757;
+    --text-color: #1e293b;
+    --background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+    --box-bg: rgba(255, 255, 255, 0.82);
+    --analog-bg: radial-gradient(circle at center, #ffffff 0%, #f8fafc 100%);
+    --day-label: #334155;
+    --tehran-color: #2563eb;
+    --market-arc-color: #10b981;
+    --shadow-color: rgba(0, 0, 0, 0.12);
+    --glow-color: rgba(99, 102, 241, 0.4);
+    --settings-bg: rgba(255, 255, 255, 0.9);
+    --settings-card-bg: rgba(255, 255, 255, 0.7);
+    --settings-border: rgba(0, 0, 0, 0.1);
+    --settings-text: #1e293b;
+    --settings-label: #475569;
+    --settings-button: #6366f1;
+    --settings-button-hover: #4f46e5;
+    --settings-close: #ff4757;
+    --settings-input-bg: #f8fafc;
+    --settings-input-border: #cbd5e1;
+    --settings-input-focus: #6366f1;
+    --hour-hand-color: #1e293b;
+    --minute-hand-color: #64748b;
+    --open-hour-hand-color: #10b981;
+    --open-minute-hand-color: #34d399;
+    --card-radius: 24px;
+    --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dark {
+    --primary-color: #a78bfa;
+    --secondary-color: #818cf8;
+    --accent-color: #ff6b81;
+    --text-color: #f8fafc;
+    --background: linear-gradient(135deg, #030712 0%, #090d16 50%, #111827 100%);
+    --box-bg: rgba(15, 23, 42, 0.75);
+    --analog-bg: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    --day-label: #e2e8f0;
+    --tehran-color: #60a5fa;
+    --market-arc-color: #34d399;
+    --shadow-color: rgba(0, 0, 0, 0.7);
+    --glow-color: rgba(129, 140, 248, 0.5);
+    --settings-bg: rgba(15, 23, 42, 0.92);
+    --settings-card-bg: rgba(30, 41, 59, 0.6);
+    --settings-border: rgba(255, 255, 255, 0.1);
+    --settings-text: #f1f5f9;
+    --settings-label: #cbd5e1;
+    --settings-button: #818cf8;
+    --settings-button-hover: #6366f1;
+    --settings-close: #ff6b81;
+    --settings-input-bg: rgba(15, 23, 42, 0.8);
+    --settings-input-border: rgba(255, 255, 255, 0.2);
+    --settings-input-focus: #818cf8;
+    --hour-hand-color: #f8fafc;
+    --minute-hand-color: #cbd5e1;
+}
+
+/* Dark preset (user picks a dark background but theme toggle is still "light")
+   Reuses all the dark-mode color variables for legibility on dark backgrounds */
+body.dark-preset {
+    --primary-color: #a78bfa;
+    --secondary-color: #818cf8;
+    --accent-color: #ff6b81;
+    --text-color: #f8fafc;
+    --box-bg: rgba(15, 23, 42, 0.72);
+    --analog-bg: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    --day-label: #e2e8f0;
+    --tehran-color: #60a5fa;
+    --market-arc-color: #34d399;
+    --shadow-color: rgba(0, 0, 0, 0.7);
+    --glow-color: rgba(129, 140, 248, 0.5);
+    --settings-bg: rgba(15, 23, 42, 0.92);
+    --settings-card-bg: rgba(30, 41, 59, 0.6);
+    --settings-border: rgba(255, 255, 255, 0.1);
+    --settings-text: #f1f5f9;
+    --settings-label: #cbd5e1;
+    --settings-button: #818cf8;
+    --settings-button-hover: #6366f1;
+    --settings-close: #ff6b81;
+    --settings-input-bg: rgba(15, 23, 42, 0.8);
+    --settings-input-border: rgba(255, 255, 255, 0.2);
+    --settings-input-focus: #818cf8;
+    --hour-hand-color: #f8fafc;
+    --minute-hand-color: #cbd5e1;
+}
+/* Dark-preset overrides for elements that use direct colors instead of variables */
+body.dark-preset #date-info {
+    background: rgba(15, 23, 42, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+body.dark-preset .date-p { color: #38bdf8; }
+body.dark-preset .date-g { color: #fff; }
+body.dark-preset #settings-btn,
+body.dark-preset #theme-toggle-btn,
+body.dark-preset #calendar-btn {
+    background: rgba(15, 23, 42, 0.7); color: #38bdf8;
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+body.dark-preset .analog-clock { border-color: #334155; }
+body.dark-preset .timeline-hour { color: #f1f5f9; text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.9); }
+body.dark-preset .timeline-tick { background-color: #f8fafc; }
+body.dark-preset .timeline-tick-major { background-color: #f8fafc; }
+body.dark-preset .session-sydney.closed, body.dark-preset .session-tokyo.closed,
+body.dark-preset .session-london.closed, body.dark-preset .session-newyork.closed {
+    background: repeating-linear-gradient(45deg, rgba(255,255,255, 0.03), rgba(255,255,255, 0.03) 8px, rgba(255,255,255, 0.08) 8px, rgba(255,255,255, 0.08) 16px);
+    color: #f8fafc !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+body.dark-preset .session-block.weekend-closed {
+    background: repeating-linear-gradient(45deg, rgba(255,255,255, 0.03), rgba(255,255,255, 0.03) 8px, rgba(255,255,255, 0.08) 8px, rgba(255,255,255, 0.08) 16px) !important;
+    color: #f8fafc !important;
+}
+body.dark-preset .pair-tag { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: #cbd5e1; }
+body.dark-preset .timezone { background: rgba(255,255,255,0.06); }
+body.dark-preset .digital-clock { background: rgba(252, 238, 167, 0.15); color: #e2e8f0; }
+body.dark-preset .volatility-bars-container { background: rgba(0, 0, 0, 0.3) !important; border-color: rgba(255, 255, 255, 0.08) !important; }
+body.dark-preset #timeline-wrapper {
+    background: rgba(15, 23, 42, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+body.dark-preset #timeline-graph-wrapper { background-color: rgba(0, 0, 0, 0.35); }
+body.dark-preset .session-tooltip { background-color: rgba(15,23,42,0.98); color: #f1f5f9; border-color: rgba(255,255,255,0.1); }
+body.dark-preset .toast-notification { background: rgba(15, 23, 42, 0.98); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.15); }
+body.dark-preset .scroll-top-btn { background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); }
+body.dark-preset .switch-container { background: var(--settings-card-bg); border-color: var(--settings-border); }
+body.dark-preset .switch .slider { background-color: #475569; }
+body.dark-preset #volatility-wrapper { border-top: 1px dashed rgba(255, 255, 255, 0.15); }
+body.dark-preset .tradingview-widget-container { box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1) !important; }
+body.dark-preset .app-footer { color: #cbd5e1; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--background);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding: 0;
+    transition: background 0.6s var(--transition-smooth), color 0.4s var(--transition-smooth);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Animated background gradient overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: ambientShift 20s ease-in-out infinite alternate;
+}
+body.dark::before {
+    background: radial-gradient(circle at 20% 30%, rgba(129, 140, 248, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+}
+@keyframes ambientShift {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(2%, -1%) scale(1.05); }
+    100% { transform: translate(-1%, 2%) scale(1); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--secondary-color), var(--primary-color)); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); background-clip: padding-box; }
+
+.custom-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+
+/* Date Box - More elegant */
+#date-info {
+    position: absolute; top: 20px; right: 20px;
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px 18px; border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    z-index: 100;
+    transition: all 0.4s var(--transition-bounce);
+    cursor: pointer;
+    font-size: 14px;
+}
+body.dark #date-info {
+    background: rgba(15, 23, 42, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+#date-info:hover {
+    transform: translateY(-3px) scale(1.03);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: var(--secondary-color);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
+}
+body.dark #date-info:hover {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: var(--secondary-color);
+    box-shadow: 0 15px 35px rgba(129, 140, 248, 0.35);
+}
+.date-p { font-family: 'Vazirmatn'; font-size: 13px; font-weight: 700; color: #0284c7; transition: color 0.3s; }
+body.dark .date-p { color: #38bdf8; }
+.date-g { font-family: 'Courier New', monospace; font-size: 13px; font-weight: bold; color: #000; direction: ltr; transition: color 0.3s; }
+body.dark .date-g { color: #fff; }
+.date-sep { color: var(--text-color); opacity: 0.3; font-size: 14px; }
+
+/* Action Buttons - Floating with better depth */
+#settings-btn, #theme-toggle-btn, #calendar-btn {
+    position: fixed; z-index: 51;
+    background: rgba(255, 255, 255, 0.7); color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 25px var(--shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px; padding: 10px; cursor: pointer;
+    height: 46px; width: 46px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.4s var(--transition-bounce);
+}
+body.dark #settings-btn, body.dark #theme-toggle-btn, body.dark #calendar-btn {
+    background: rgba(15, 23, 42, 0.7); color: #38bdf8;
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+#settings-btn:hover, #theme-toggle-btn:hover, #calendar-btn:hover {
+    transform: translateY(-3px) scale(1.08);
+    box-shadow: 0 15px 35px var(--glow-color);
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white; border-color: transparent;
+}
+#settings-btn svg, #theme-toggle-btn svg, #calendar-btn svg { height: 22px; width: 22px; transition: transform 0.4s var(--transition-bounce); }
+#settings-btn:hover svg, #theme-toggle-btn:hover svg, #calendar-btn:hover svg { transform: rotate(30deg) scale(1.1); }
+#calendar-btn { top: 20px; left: 20px; }
+#theme-toggle-btn { top: 76px; left: 20px; }
+#settings-btn { top: 132px; left: 20px; }
+
+/* Modal Settings - Premium glassmorphism */
+.modal { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; display: none; backdrop-filter: blur(8px); animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+    max-width: 420px;
+    background: var(--settings-bg);
+    backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+    border-radius: 22px; padding: 0; font-size: 1.05em; margin: 40px auto;
+    position: relative;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    border: 1px solid var(--settings-border);
+    animation: modalIn 0.45s var(--transition-bounce);
+}
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(-30px) scale(0.92); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.settings-header {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    padding: 16px 22px; display: flex; justify-content: space-between; align-items: center;
+    border-radius: 22px 22px 0 0; color: white;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+}
+body.dark .settings-header { background: linear-gradient(135deg, #818cf8, #6366f1); }
+.settings-title { font-weight: 800; font-size: 1.1em; display: flex; align-items: center; gap: 8px; }
+.modal-close {
+    background: rgba(255, 255, 255, 0.2); border: none; color: white;
+    font-size: 1.4em; cursor: pointer; padding: 0; width: 32px; height: 32px;
+    border-radius: 50%; transition: all 0.3s var(--transition-bounce);
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+}
+.modal-close:hover { transform: rotate(90deg) scale(1.1); background: rgba(255, 71, 87, 0.9); }
+
+.settings-body { padding: 18px 24px; max-height: 65vh; overflow-y: auto; }
+.settings-body::-webkit-scrollbar { width: 6px; }
+.settings-body::-webkit-scrollbar-track { background: transparent; }
+.settings-body::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+.settings-body::-webkit-scrollbar-thumb:hover { background: var(--secondary-color); }
+
+.settings-section-title {
+    font-size: 0.85em; font-weight: 800; color: var(--secondary-color);
+    margin: 20px 0 12px 0; opacity: 0.95;
+    display: flex; align-items: center; gap: 6px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+body.dark .settings-section-title { color: #818cf8; }
+.settings-section-title:first-child { margin-top: 0; }
+
+.settings-row { display: flex; margin-bottom: 14px; align-items: center; justify-content: space-between; transition: all 0.2s; }
+.settings-row:hover { transform: translateX(-2px); }
+.settings-label { color: var(--settings-label); font-size: 0.88em; font-weight: 600; flex: 1; }
+.settings-control { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex: 1; }
+
+.settings-control select {
+    padding: 8px 12px; border-radius: 10px;
+    border: 1px solid var(--settings-input-border);
+    background: var(--settings-input-bg); color: var(--settings-text);
+    font-family: 'Vazirmatn', sans-serif; width: 100%; font-size: 0.85em; cursor: pointer;
+    outline: none; transition: all 0.3s;
+}
+.settings-control select:hover { border-color: var(--secondary-color); }
+.settings-control select:focus { border-color: var(--secondary-color); box-shadow: 0 0 0 3px var(--glow-color); }
+.settings-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--settings-border), transparent); margin: 18px 0; }
+.settings-footer {
+    background: var(--settings-card-bg); padding: 14px 22px;
+    border-top: 1px solid var(--settings-border); text-align: center;
+    border-radius: 0 0 22px 22px;
+}
+#settings-reset {
+    font-size: 0.85em;
+    background: linear-gradient(135deg, #ff4757, #e74c3c);
+    color: white; border: none; border-radius: 12px;
+    padding: 10px 30px; cursor: pointer;
+    font-family: 'Vazirmatn'; font-weight: 700;
+    transition: all 0.3s var(--transition-bounce);
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+#settings-reset:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 25px rgba(255, 71, 87, 0.5); }
+#settings-reset:active { transform: translateY(0) scale(0.98); }
+
+.color-picker-group { display: flex; gap: 6px; align-items: center; width: 100%; justify-content: flex-end; }
+.color-picker-group input[type="color"], .settings-control input[type="color"] {
+    -webkit-appearance: none; border: none; width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer; background: none;
+    transition: all 0.3s var(--transition-bounce);
+}
+.color-picker-group input[type="color"]:hover, .settings-control input[type="color"]:hover { transform: scale(1.15); }
+.color-picker-group input[type="color"]::-webkit-color-swatch-wrapper, .settings-control input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.color-picker-group input[type="color"]::-webkit-color-swatch, .settings-control input[type="color"]::-webkit-color-swatch {
+    border: 2px solid var(--settings-border); border-radius: 50%;
+}
+
+/* Switches - More polished */
+.switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-top: 5px; }
+.switch-container { display: flex; align-items: center; padding: 8px 10px; background: var(--settings-card-bg); border-radius: 10px; border: 1px solid var(--settings-border); transition: all 0.3s; }
+.switch-container:hover { border-color: var(--secondary-color); transform: translateY(-1px); }
+.switch { position: relative; display: inline-block; width: 36px; height: 20px; flex-shrink: 0; margin-left: 8px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s var(--transition-bounce); border-radius: 20px; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .3s var(--transition-bounce); border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+input:checked + .slider { background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); }
+input:checked + .slider:before { transform: translateX(16px); box-shadow: 0 2px 8px rgba(99, 102, 241, 0.5); }
+body.dark .slider { background-color: #475569; }
+.switch-label { font-size: 0.85em; color: var(--settings-text); font-weight: 700; }
+
+/* Clock Cards Grid - Premium redesign */
+.clocks-grid {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 20px; padding: 0 10px; margin-top: 15px;
+    max-width: 1400px; margin-left: auto; margin-right: auto; flex: 1;
+    position: relative; z-index: 1;
+}
+.city-clock {
+    background: var(--box-bg);
+    border-radius: var(--card-radius);
+    padding: 14px 14px 18px 14px; text-align: center;
+    box-shadow: 0 12px 30px var(--shadow-color), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.45s var(--transition-smooth);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    flex: 0 0 calc(20% - 20px); max-width: calc(20% - 20px);
+    min-width: 240px;
+    border: 1px solid var(--settings-border);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    cursor: grab;
+    animation: cardFadeIn 0.6s var(--transition-bounce) backwards;
+}
+@keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.city-clock:active { cursor: grabbing; }
+.city-clock.hidden-clock { display: none !important; }
+.city-clock.dragging { opacity: 0.5; transform: scale(0.95) rotate(2deg); box-shadow: 0 20px 40px var(--accent-color); }
+
+.panel-close-btn {
+    position: absolute; top: 10px; left: 10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    border: none; background: rgba(255, 71, 87, 0.95); color: white;
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transform: scale(0.5);
+    transition: all 0.3s var(--transition-bounce);
+    z-index: 50; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.panel-close-btn:hover { background: #ff3344; transform: scale(1.15) rotate(90deg); box-shadow: 0 6px 18px rgba(255, 71, 87, 0.5); }
+.city-clock:hover .panel-close-btn { opacity: 1; visibility: visible; transform: scale(1); }
+
+.city-clock::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--current-color, transparent);
+    transition: all 0.4s var(--transition-smooth);
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+.city-clock::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--current-color, transparent);
+    opacity: 0; transition: opacity 0.4s;
+    pointer-events: none; border-radius: var(--card-radius);
+}
+.city-clock:hover::after { opacity: 0.04; }
+.city-clock:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px var(--shadow-color), 0 0 30px var(--current-color, rgba(255,255,255,0.1));
+    border-color: var(--current-color, var(--settings-border));
+}
+.city-name {
+    font-size: 1.4em; font-weight: 900; color: var(--text-color);
+    margin-bottom: 6px; font-family: 'Vazirmatn';
+    text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    pointer-events: none;
+    transition: color 0.4s;
+    position: relative; z-index: 1;
+}
+.city-clock:hover .city-name { color: var(--current-color, var(--secondary-color)); }
+
+.clock-scale-wrapper {
+    width: 220px; height: 220px;
+    margin: 0 auto 6px auto; position: relative;
+    transform-origin: top center;
+    transition: transform 0.4s var(--transition-bounce);
+    flex-shrink: 0; pointer-events: none;
+}
+.city-clock:hover .clock-scale-wrapper { transform: scale(1.04); }
+
+.clock-arc { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 220px; height: 220px; pointer-events: none; z-index: 8; overflow: visible; }
+.clock-arc .track-arc { stroke: var(--current-color, var(--market-arc-color)); stroke-width: 5px; opacity: 0.4; stroke-dasharray: 6 5; transition: opacity 0.4s ease, stroke 0.4s ease; }
+.clock-arc .progress-arc { stroke: var(--current-color, var(--market-arc-color)); stroke-width: 6px; filter: drop-shadow(0 0 6px var(--current-color, #10b981)); transition: stroke 0.4s ease; }
+.analog-clock {
+    width: 100%; height: 100%;
+    border: 3px solid var(--text-color); border-radius: 50%;
+    position: relative;
+    background: var(--analog-bg);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.5);
+    transition: all 0.4s var(--transition-smooth);
+}
+body.dark .analog-clock { border-color: #334155; }
+.city-clock:hover .analog-clock {
+    border-color: var(--current-color, var(--primary-color));
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.15), 0 12px 30px rgba(0,0,0,0.2), 0 0 25px var(--current-color, transparent);
+}
+
+.clock-center {
+    position: absolute; width: 12px; height: 12px;
+    background: var(--accent-color); border-radius: 50%;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 10; box-shadow: 0 0 12px rgba(255, 71, 87, 0.7);
+    transition: transform 0.3s;
+}
+.city-clock:hover .clock-center { transform: translate(-50%, -50%) scale(1.2); }
+.hand { position: absolute; transform-origin: bottom center; left: 50%; bottom: 50%; border-radius: 6px; transform: translateX(-50%); transition: filter 0.3s; }
+
+.hour-hand { width: 5px; height: 60px; background: var(--hour-hand-color); z-index: 3; }
+.minute-hand { width: 3px; height: 75px; background: var(--minute-hand-color); z-index: 2; }
+.second-hand { width: 2px; height: 85px; background: var(--accent-color); z-index: 1; }
+
+.city-clock.market-open-card .hour-hand { background: var(--open-hour-hand-color); box-shadow: 0 0 8px var(--open-hour-hand-color); }
+.city-clock.market-open-card .minute-hand { background: var(--open-minute-hand-color); box-shadow: 0 0 6px var(--open-minute-hand-color); }
+.city-clock.market-open-card .second-hand { animation: secondPulse 1s ease-in-out infinite; }
+@keyframes secondPulse { 0%, 100% { box-shadow: 0 0 4px var(--accent-color); } 50% { box-shadow: 0 0 12px var(--accent-color); } }
+
+.number { position: absolute; width: 24px; height: 24px; text-align: center; line-height: 24px; font-weight: 900; color: var(--text-color); font-size: 14px; transform: translate(-50%, -50%); margin-top: 4px; z-index: 2; transition: color 0.3s; }
+.minute-mark { position: absolute; background: #94a3b8; left: 50%; top: 50%; transform-origin: center; transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-95px); width: 1.5px; height: 6px; opacity: 0.6; }
+.minute-mark.thick { width: 3px; height: 10px; opacity: 1; background: var(--text-color); }
+.city-clock:hover .minute-mark.thick { background: var(--current-color, var(--secondary-color)); }
+
+.digital-clock {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em; font-weight: 900;
+    color: var(--text-color);
+    background: var(--digital-bg, #fceea7);
+    padding: 10px 12px; border-radius: 12px;
+    margin-top: 8px; direction: ltr; letter-spacing: 2px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+    border: 1px solid var(--digital-border, rgba(0, 0, 0, 0.15));
+    position: relative; overflow: hidden; pointer-events: none;
+    transition: all 0.3s var(--transition-smooth);
+}
+body.dark .digital-clock { background: var(--digital-bg, rgba(252, 238, 167, 0.15)); color: #e2e8f0; }
+.city-clock:hover .digital-clock { transform: scale(1.05); }
+
+.day-name { margin-top: 6px; color: var(--day-label); font-family: 'Vazirmatn', sans-serif; font-size: 0.9em; text-align: center; font-weight: 700; pointer-events: none; }
+.card-middle-content { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; pointer-events: none; }
+.market-status { font-size: 0.85em; font-weight: 800; margin-top: 6px; font-family: 'Vazirmatn'; min-height: 22px; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.3s; }
+.market-time-remaining { font-size: 0.8em; font-family: 'Vazirmatn'; margin-top: 3px; opacity: 0.9; font-weight: 700; min-height: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; direction: rtl; transition: all 0.3s; }
+
+.timezone {
+    font-size: 0.78em; color: var(--day-label); margin-top: auto; direction: ltr; font-family: monospace;
+    background: rgba(0,0,0,0.06); padding: 4px 8px; border-radius: 8px;
+    display: inline-block; pointer-events: none;
+    transition: all 0.3s;
+}
+body.dark .timezone { background: rgba(255,255,255,0.06); }
+.city-clock:hover .timezone { background: var(--current-color, rgba(0,0,0,0.1)); color: white; }
+
+.pairs-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 8px; margin-bottom: 8px; min-height: 28px; align-items: center; }
+.pair-tag {
+    font-size: 0.74em; font-weight: 800;
+    padding: 3px 8px; border-radius: 8px;
+    background: rgba(0, 0, 0, 0.06); color: var(--day-label);
+    border: 1px solid rgba(0,0,0,0.08);
+    direction: ltr; font-family: monospace;
+    transition: all 0.3s var(--transition-bounce);
+}
+body.dark .pair-tag { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: #cbd5e1; }
+.city-clock.market-open-card .pair-tag { background: rgba(16, 185, 129, 0.15); color: #059669; border-color: rgba(16, 185, 129, 0.3); font-weight: 900; }
+body.dark .city-clock.market-open-card .pair-tag { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+body.hide-pairs .pairs-container { display: none !important; }
+
+h1 {
+    text-align: center;
+    margin: 30px auto 20px auto;
+    font-size: 2.6em;
+    display: block; width: 100%; max-width: 100vw;
+    font-family: 'Vazirmatn'; font-weight: 900;
+    letter-spacing: -0.5px;
+    animation: titleSlide 0.8s var(--transition-bounce);
+    position: relative; z-index: 1;
+    line-height: 1.2;
+    padding: 8px 20px;
+
+    /* Vivid multi-color gradient text — deep indigo → electric blue → cyan */
+    background: linear-gradient(120deg, #4c1d95 0%, #6366f1 25%, #2563eb 50%, #0891b2 75%, #4c1d95 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    /* Layered glow for depth and "gloss" */
+    filter:
+        drop-shadow(0 2px 1px rgba(76, 29, 149, 0.25))
+        drop-shadow(0 4px 12px rgba(99, 102, 241, 0.35))
+        drop-shadow(0 8px 24px rgba(37, 99, 235, 0.2));
+
+    /* Subtle animated shimmer for premium "alive" feel */
+    animation: titleSlide 0.8s var(--transition-bounce), titleShimmer 6s linear infinite;
+}
+@keyframes titleShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes titleSlide {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Decorative gradient underline accent beneath the title */
+h1::after {
+    content: '';
+    display: block;
+    width: 180px;
+    height: 4px;
+    margin: 12px auto 0 auto;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent 0%, #6366f1 20%, #06b6d4 50%, #6366f1 80%, transparent 100%);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.6), 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0.9;
+}
+
+body.dark h1 {
+    /* Bright neon-style gradient for dark mode — purple → cyan → pink → purple */
+    background: linear-gradient(120deg, #c4b5fd 0%, #818cf8 20%, #67e8f9 40%, #f472b6 60%, #c4b5fd 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    filter:
+        drop-shadow(0 0 8px rgba(167, 139, 250, 0.6))
+        drop-shadow(0 0 18px rgba(129, 140, 248, 0.4))
+        drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+body.dark h1::after {
+    background: linear-gradient(90deg, transparent 0%, #818cf8 20%, #67e8f9 50%, #f472b6 80%, transparent 100%);
+    box-shadow: 0 0 16px rgba(129, 140, 248, 0.8), 0 0 24px rgba(103, 232, 249, 0.4);
+}
+
+/* TradingView ticker tape - styled container */
+.tradingview-widget-container {
+    border-radius: var(--card-radius) !important;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255,255,255,0.3) !important;
+    transition: all 0.4s var(--transition-smooth);
+    position: relative; z-index: 1;
+}
+.tradingview-widget-container:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2) !important; }
+
+/* Timeline UI - Premium */
+#timeline-wrapper {
+    width: 96%; max-width: 1280px;
+    margin: 15px auto 25px auto;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--card-radius);
+    padding: 20px 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12), inset 0 1px 8px rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    position: relative; z-index: 1;
+    transition: all 0.4s;
+}
+body.dark #timeline-wrapper { background: rgba(15, 23, 42, 0.45); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+#timeline-graph-wrapper {
+    position: relative; width: 100%;
+    background-color: rgba(0, 0, 0, 0.08);
+    border-radius: 14px; padding: 8px 0;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+}
+body.dark #timeline-graph-wrapper { background-color: rgba(0, 0, 0, 0.35); }
+
+#timeline-container { position: relative; z-index: 10; width: 100%; height: 36px; margin-bottom: 4px; }
+.timeline-hour { position: absolute; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: #1e293b; font-weight: 900; text-shadow: 0px 0px 6px rgba(255, 255, 255, 0.9); z-index: 5; }
+body.dark .timeline-hour { color: #f1f5f9; text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.9); }
+.timeline-tick { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 1px; height: 8px; background-color: #1e293b; opacity: 0.15; }
+body.dark .timeline-tick { background-color: #f8fafc; }
+.timeline-tick-major { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 2px; height: 18px; background-color: #1e293b; opacity: 0.3; }
+body.dark .timeline-tick-major { background-color: #f8fafc; }
+
+/* === Overlap bands drawn directly on the timeline ruler === */
+/* Full-height translucent column BEHIND the ruler (numbers stay on top) */
+.ruler-overlap-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    border-radius: 6px;
+    z-index: 1;  /* behind ticks (z=5), hours (z=5), and indicator (z=100) */
+    pointer-events: auto;
+    cursor: help;
+    transition: all 0.3s var(--transition-bounce);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+}
+/* 2-market overlap: translucent yellow/orange — subtle so numbers stay readable */
+.ruler-overlap-band.level-2 {
+    background: linear-gradient(180deg, rgba(251, 191, 36, 0.35) 0%, rgba(245, 158, 11, 0.28) 100%);
+}
+/* 3-market overlap: translucent red/pink — slightly stronger */
+.ruler-overlap-band.level-3 {
+    background: linear-gradient(180deg, rgba(251, 113, 133, 0.40) 0%, rgba(225, 29, 72, 0.32) 100%);
+    box-shadow: inset 0 0 0 1px rgba(225, 29, 72, 0.3);
+}
+/* Active overlap (current time inside): brighter + green edge glow */
+.ruler-overlap-band.is-active {
+    filter: brightness(1.15) saturate(1.1);
+    box-shadow:
+        inset 0 0 0 1.5px rgba(16, 185, 129, 0.6),
+        0 0 14px rgba(16, 185, 129, 0.45),
+        inset 0 0 20px rgba(16, 185, 129, 0.15);
+    z-index: 2;
+}
+body.dark .ruler-overlap-band.is-active {
+    box-shadow:
+        inset 0 0 0 1.5px rgba(52, 211, 153, 0.7),
+        0 0 16px rgba(52, 211, 153, 0.5),
+        inset 0 0 22px rgba(52, 211, 153, 0.18);
+}
+.ruler-overlap-band:hover {
+    filter: brightness(1.1) saturate(1.05);
+}
+
+#timeline-indicator { position: absolute; top: -8px; width: 3px; height: 180px; background: linear-gradient(180deg, #00f2fe, #4facfe); z-index: 100; border-radius: 3px; transform: translateX(-50%); box-shadow: 0 0 15px #00f2fe, 0 0 4px #fff; animation: indicatorPulse 2s ease-in-out infinite; }
+@keyframes indicatorPulse { 0%, 100% { box-shadow: 0 0 15px #00f2fe, 0 0 4px #fff; } 50% { box-shadow: 0 0 25px #00f2fe, 0 0 8px #fff; } }
+body.dark #timeline-indicator { background: linear-gradient(180deg, #ff4757, #ff6b81); box-shadow: 0 0 15px #ff4757, 0 0 4px #fff; }
+body.dark #timeline-indicator { animation: indicatorPulseDark 2s ease-in-out infinite; }
+@keyframes indicatorPulseDark { 0%, 100% { box-shadow: 0 0 15px #ff4757, 0 0 4px #fff; } 50% { box-shadow: 0 0 25px #ff4757, 0 0 8px #fff; } }
+#timeline-indicator::before { content: attr(data-time); position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 900; white-space: nowrap; box-shadow: 0 4px 10px rgba(0, 242, 254, 0.4); }
+body.dark #timeline-indicator::before { background: linear-gradient(135deg, #ff4757, #ff6b81); color: #fff; box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4); }
+.sessions-container { position: relative; z-index: 3; width: 100%; height: 32px; margin-bottom: 2px; border-radius: 8px; }
+
+.session-block { position: absolute; top: 4px; bottom: 4px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; transition: transform 0.3s var(--transition-bounce), box-shadow 0.3s, filter 0.3s; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.2); }
+
+.session-sydney.open   { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; box-shadow: 0 3px 12px rgba(0, 114, 255, 0.4); }
+.session-tokyo.open    { background: linear-gradient(135deg, #f12711, #f5af19); color: white; box-shadow: 0 3px 12px rgba(245, 175, 25, 0.4); }
+.session-london.open   { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; box-shadow: 0 3px 12px rgba(56, 239, 125, 0.4); }
+.session-newyork.open  { background: linear-gradient(135deg, #8E2DE2, #4A00E0); color: white; box-shadow: 0 3px 12px rgba(74, 0, 224, 0.4); }
+
+.session-sydney.closed, .session-tokyo.closed, .session-london.closed, .session-newyork.closed { background: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03) 8px, rgba(0, 0, 0, 0.08) 8px, rgba(0, 0, 0, 0.08) 16px); color: #1e293b; border: 1px solid rgba(0, 0, 0, 0.2) !important; box-shadow: none; }
+body.dark .session-sydney.closed, body.dark .session-tokyo.closed, body.dark .session-london.closed, body.dark .session-newyork.closed { background: repeating-linear-gradient(45deg, rgba(255,255,255, 0.03), rgba(255,255,255, 0.03) 8px, rgba(255,255,255, 0.08) 8px, rgba(255,255,255, 0.08) 16px); color: #f8fafc !important; border: 1px solid rgba(255, 255, 255, 0.15) !important;}
+
+.session-block.weekend-closed { background: repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.1), rgba(148, 163, 184, 0.1) 8px, rgba(148, 163, 184, 0.3) 8px, rgba(148, 163, 184, 0.3) 16px) !important; color: #334155 !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; box-shadow: none !important; }
+body.dark .session-block.weekend-closed { background: repeating-linear-gradient(45deg, rgba(255,255,255, 0.03), rgba(255,255,255, 0.03) 8px, rgba(255,255,255, 0.08) 8px, rgba(255,255,255, 0.08) 16px) !important; color: #f8fafc !important; }
+
+.session-tooltip { position: fixed; background-color: rgba(255,255,255,0.98); color: #1e293b; padding: 10px 14px; border-radius: 10px; font-size: 12px; white-space: nowrap; font-family: 'Vazirmatn'; font-weight: 700; opacity: 0; visibility: hidden; z-index: 1000; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.25); pointer-events: none; border: 1px solid rgba(0,0,0,0.05);}
+body.dark .session-tooltip { background-color: rgba(15,23,42,0.98); color: #f1f5f9; border-color: rgba(255,255,255,0.1); }
+.session-block:hover { transform: translateY(-3px) scale(1.02); z-index: 20; filter: brightness(1.15); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+
+/* === Full-height active overlap column === */
+/* When the current-time indicator falls inside an overlap zone, this column
+   highlights the entire timeline height (ruler + all session rows) so the
+   active overlap range is instantly visible. */
+#timeline-graph-wrapper { position: relative; }
+.overlap-active-column {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 4;
+    pointer-events: none;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.10) 50%, rgba(16, 185, 129, 0.18) 100%);
+    border-left: 2px dashed rgba(16, 185, 129, 0.75);
+    border-right: 2px dashed rgba(16, 185, 129, 0.75);
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.25), inset 0 0 20px rgba(16, 185, 129, 0.08);
+    animation: overlapColumnPulse 2.4s ease-in-out infinite;
+}
+body.dark .overlap-active-column {
+    background: linear-gradient(180deg, rgba(52, 211, 153, 0.20) 0%, rgba(52, 211, 153, 0.10) 50%, rgba(52, 211, 153, 0.20) 100%);
+    border-left-color: rgba(52, 211, 153, 0.8);
+    border-right-color: rgba(52, 211, 153, 0.8);
+    box-shadow: 0 0 22px rgba(52, 211, 153, 0.3), inset 0 0 20px rgba(52, 211, 153, 0.1);
+}
+@keyframes overlapColumnPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.65; }
+}
+
+/* Volatility UI */
+body.hide-volatility #volatility-wrapper { display: none !important; }
+#volatility-wrapper { margin-top: 18px; padding-top: 18px; border-top: 1px dashed rgba(0, 0, 0, 0.15); width: 100%; }
+body.dark #volatility-wrapper { border-top: 1px dashed rgba(255, 255, 255, 0.15); }
+
+.volatility-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.88em; font-weight: 800; margin-bottom: 10px; color: var(--text-color); }
+.volatility-legend { display: flex; gap: 12px; font-size: 0.8em; font-weight: 700; }
+.volatility-legend span { display: flex; align-items: center; gap: 5px; }
+.volatility-legend span::before { content: ''; display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-left: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+.legend-low::before { background: #ef4444; }
+.legend-med::before { background: #f59e0b; }
+.legend-high::before { background: #10b981; }
+
+.volatility-bars-container { position: relative; width: 100%; height: 55px; background: rgba(255, 255, 255, 0.4) !important; border-radius: 10px !important; border: 1px solid rgba(255, 255, 255, 0.5) !important; box-shadow: inset 0 2px 8px rgba(0,0,0,0.05); }
+body.dark .volatility-bars-container { background: rgba(0, 0, 0, 0.3) !important; border-color: rgba(255, 255, 255, 0.08) !important; }
+
+.vol-bar { position: absolute; bottom: 0; border-radius: 5px 5px 0 0; opacity: 0.85; transition: all 0.3s; }
+.vol-bar.active-hour { opacity: 1; filter: brightness(1.3); z-index: 2; box-shadow: 0 0 12px currentColor, 0 -2px 8px currentColor; transform: translateY(-2px); }
+
+/* Toast Notification - Enhanced */
+#toast-container { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+.toast-notification {
+    min-width: 300px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    color: var(--text-color); padding: 16px 24px; border-radius: 16px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+    display: flex; align-items: center; gap: 16px;
+    font-family: 'Vazirmatn', sans-serif; font-weight: 700;
+    animation: toast-in 0.5s var(--transition-bounce) forwards, toast-out 0.5s ease-in 4.5s forwards;
+    border: 1px solid rgba(255, 255, 255, 0.6); position: relative; overflow: hidden;
+}
+body.dark .toast-notification { background: rgba(15, 23, 42, 0.98); color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.15); }
+.toast-notification::after { content: ''; position: absolute; bottom: 0; left: 0; height: 4px; width: 100%; animation: toast-progress 5s linear forwards; border-radius: 0 0 16px 16px; }
+.toast-notification.open::after { background: #2ecc71; box-shadow: 0 0 12px #2ecc71; }
+.toast-notification.closed::after { background: #e74c3c; box-shadow: 0 0 12px #e74c3c; }
+
+@keyframes toast-in { from { opacity: 0; transform: translateY(-40px) scale(0.85); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toast-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-40px) scale(0.85); } }
+@keyframes toast-progress { from { width: 100%; } to { width: 0%; } }
+
+/* Scroll to top button */
+.scroll-top-btn {
+    position: fixed; bottom: 25px; left: 25px;
+    width: 48px; height: 48px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 25px var(--glow-color);
+    opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.8);
+    transition: all 0.4s var(--transition-bounce);
+    z-index: 50;
+}
+.scroll-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+.scroll-top-btn:hover { transform: translateY(-3px) scale(1.08); box-shadow: 0 15px 35px var(--glow-color); }
+
+/* Footer credit */
+.app-footer {
+    text-align: center; padding: 15px;
+    font-size: 0.75em; opacity: 0.5;
+    font-weight: 600;
+    position: relative; z-index: 1;
+}
+
+@media (min-width: 1200px) { .clocks-grid { max-width: 1400px; } }
+@media (max-width: 1199px) and (min-width: 768px) { .city-clock { flex: 0 0 calc(33.33% - 20px); max-width: calc(33.33% - 20px); } }
+@media (max-width: 767px) {
+    .city-clock { flex: 0 0 calc(50% - 20px); max-width: calc(50% - 20px); }
+    h1 { font-size: 1.9em; }
+    h1::after { width: 130px; height: 3px; margin-top: 10px; }
+    #date-info { flex-direction: column; align-items: flex-end; gap: 4px; padding: 8px 14px; }
+    .date-sep { display: none; }
+    .clocks-grid { gap: 15px; padding: 0 5px; }
+    #settings-btn, #theme-toggle-btn, #calendar-btn { height: 42px; width: 42px; }
+    #calendar-btn { top: 15px; left: 15px; }
+    #theme-toggle-btn { top: 65px; left: 15px; }
+    #settings-btn { top: 115px; left: 15px; }
+    #timeline-wrapper { padding: 15px; }
+    #timeline-container { height: 32px; }
+    /* Allow session-block text to wrap onto two lines on mobile for better readability */
+    .sessions-container { height: 44px; }
+    .session-block {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.25;
+        font-size: 10px;
+        padding: 2px 4px;
+        align-items: center;
+    }
+}
+@media (max-width: 480px) {
+    .city-clock { flex: 0 0 100%; max-width: 100%; }
+    .clock-scale-wrapper { width: 200px; height: 200px; }
+}
+</style>
+</head>
+<body>
+
+<div class="custom-background" id="custom-background"></div>
+<div id="toast-container"></div>
+
+<div id="date-info">
+    <div class="date-p"><span style="font-size: 1.2em; margin-left: 5px;">📅</span> <span id="jalali-date"></span></div>
+    <div class="date-sep">|</div>
+    <div class="date-g"><span id="gregorian-date"></span></div>
+</div>
+
+<button id="theme-toggle-btn" title="حالت شب/روز" aria-label="تغییر تم">
+    <svg id="themeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f8cc47"/><g id="darkLines" style="display:none;"><rect x="11.25" y="1" width="1.5" height="3" fill="#f8cc47"/><rect x="20" y="11.25" width="3" height="1.5" fill="#f8cc47"/><rect x="2" y="11.25" width="3" height="1.5" fill="#f8cc47"/><rect x="11.25" y="20" width="1.5" height="3" fill="#f8cc47"/><rect transform="rotate(-45 17.0711 7.75735)" x="17.0711" y="7.75735" width="1.5" height="3" fill="#f8cc47"/><rect transform="rotate(45 7.75739 6.92893)" x="7.75739" y="6.92893" width="1.5" height="3" fill="#f8cc47"/><rect transform="rotate(135 16.2427 16.2426" x="16.2427" y="16.2426" width="1.5" height="3" fill="#f8cc47"/><rect transform="rotate(-135 6.92889 17.0711)" x="6.92889" y="17.0711" width="1.5" height="3" fill="#f8cc47"/></g><g id="moonCrescent"><path d="M17 12c0-2.761-2.239-5-5-5a5.003 5.003 0 0 0 4.195 7.515c.536-.185.8-.803.633-1.342A3.99 3.99 0 0 1 17 12Z" fill="#efeedd"/></g></svg>
+</button>
+<button id="settings-btn" title="تنظیمات" aria-label="تنظیمات">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 15.5A3.5 3.5 0 1 0 8.5 12 3.5 3.5 0 0 0 12 15.5ZM19.43 12.98a7.028 7.028 0 0 0 .07-1.48c0-.5-.03-.99-.07-1.48l2.11-1.65a1 1 0 0 0 .24-1.32l-2-3.46a1 1 0 0 0-1.25-.46l-2.49 1a7.034 7.034 0 0 0-1.27-.74l-.38-2.65A1 1 0 0 0 12 2h-4a1 1 0 0 0-1 .92l-.38 2.65c-.45.18-.87.39-1.27.74l-2.49-1a1 1 0 0 0-1.25.46l-2 3.46a1 1 0 0 0 .24 1.32l2.11 1.65c-.04.49-.07.98-.07 1.48s.03.99.07 1.48l-2.11 1.65a1 1 0 0 0-.24 1.32l2 3.46a1 1 0 0 0 1.25.46l2.49-1c.4.35.82.56 1.27.74l.38 2.65A1 1 0 0 0 8 22h4a1 1 0 0 0 1-.92l.38-2.65c.45-.18.87-.39 1.27-.74l2.49 1a1 1 0 0 0 1.25-.46l2-3.46a1 1 0 0 0-.24-1.32l-2.11-1.65ZM12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10Z" fill="currentColor"/></svg>
+</button>
+<button id="calendar-btn" title="تقویم اقتصادی (در تب جدید باز می‌شود)" aria-label="تقویم اقتصادی">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" fill="currentColor"/></svg>
+</button>
+
+<button class="scroll-top-btn" id="scroll-top-btn" title="بازگشت به بالا" aria-label="بازگشت به بالا">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4l-8 8h5v8h6v-8h5z" fill="currentColor"/></svg>
+</button>
+
+<div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <div class="settings-header">
+            <div class="settings-title">⚙️ تنظیمات پیشرفته</div>
+            <button class="modal-close" data-close="settings-modal" aria-label="بستن">×</button>
+        </div>
+        <div class="settings-body">
+            <div class="settings-section-title">🌍 مدیریت نمایش بازارها</div>
+            <div class="switch-grid" id="market-toggles-grid"></div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section-title">🔔 هشدارها و صدا</div>
+            <div style="margin-bottom: 15px;">
+                <div class="settings-label" style="margin-bottom: 10px;">روشن بودن هشدار بازارها:</div>
+                <div class="switch-grid">
+                    <div class="switch-container">
+                        <label class="switch"><input type="checkbox" id="alarm-sydney"/><span class="slider"></span></label>
+                        <span class="switch-label">سیدنی</span>
+                    </div>
+                    <div class="switch-container">
+                        <label class="switch"><input type="checkbox" id="alarm-tokyo"/><span class="slider"></span></label>
+                        <span class="switch-label">توکیو</span>
+                    </div>
+                    <div class="switch-container">
+                        <label class="switch"><input type="checkbox" id="alarm-london"/><span class="slider"></span></label>
+                        <span class="switch-label">لندن</span>
+                    </div>
+                    <div class="switch-container">
+                        <label class="switch"><input type="checkbox" id="alarm-ny"/><span class="slider"></span></label>
+                        <span class="switch-label">نیویورک</span>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">نوع صدای هشدار</div>
+                <div class="settings-control">
+                    <select id="alarm-sound">
+                        <option value="ding">🔔 دینگ ساده</option>
+                        <option value="beep">📟 بیپ دیجیتال</option>
+                        <option value="chime">🎵 زنگ ملایم (آکورد)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section-title">🎨 ظاهر و پس‌زمینه</div>
+            <div class="settings-row">
+                <div class="settings-label">تم‌های آماده</div>
+                <div class="settings-control">
+                    <select id="bg-preset-select">
+                        <optgroup label="⭐ پیشنهاد ما">
+                            <option value="royal">👑 نیلی-بنفش سلطنتی (پیش‌فرض)</option>
+                        </optgroup>
+                        <optgroup label="روشن و ملایم">
+                            <option value="light-sky">☁️ آبی آسمانی ملایم</option>
+                            <option value="light-cream">🥛 کرم طلایی (شیک و کلاسیک)</option>
+                            <option value="light-mint">🍃 نعنایی آرامش‌بخش</option>
+                            <option value="light-peach">🍑 هلو و گلبهی ملایم</option>
+                            <option value="light-silver">🥈 نقره‌ای ابریشمی</option>
+                        </optgroup>
+                        <optgroup label="تیره و کهکشانی">
+                            <option value="ocean">🌊 اقیانوس عمیق</option>
+                            <option value="midnight">🌌 شب کهکشانی</option>
+                            <option value="emerald">🌲 سبز مدرن (اسمرالد)</option>
+                            <option value="cyberpunk">⚡ سایبرپانک تیره</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">پس‌زمینه دلخواه</div>
+                <div class="settings-control">
+                    <div class="color-picker-group">
+                        <input type="color" id="custom-color-1" value="#4c1d95" title="رنگ شروع">
+                        <input type="color" id="custom-color-2" value="#6366f1" title="رنگ میانی">
+                        <input type="color" id="custom-color-3" value="#cbd5e1" title="رنگ پایان">
+                        <select id="gradient-angle" style="width: auto; padding: 6px 8px;">
+                            <option value="0deg">بالا به پایین</option>
+                            <option value="90deg">چپ به راست</option>
+                            <option value="135deg" selected>قطری (مورب)</option>
+                            <option value="180deg">پایین به بالا</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section-title">🖍️ رنگ ساعت و متن</div>
+            <div class="settings-row">
+                <div class="settings-label">پس‌زمینه ساعت دیجیتال</div>
+                <div class="settings-control"><input type="color" id="digital-bg-picker" value="#fceea7"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">حاشیه ساعت دیجیتال</div>
+                <div class="settings-control"><input type="color" id="digital-border-picker" value="#4b5563"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">متن بازار باز (زیر ساعت)</div>
+                <div class="settings-control"><input type="color" id="market-open-picker" value="#2ecc71"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">متن بازار بسته (زیر ساعت)</div>
+                <div class="settings-control"><input type="color" id="market-closed-picker" value="#e74c3c"></div>
+            </div>
+
+            <div class="settings-row" style="margin-top: 15px;">
+                <div class="settings-label">عقربه ساعت‌شمار (عادی)</div>
+                <div class="settings-control"><input type="color" id="hour-hand-picker" value="#1e293b"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">عقربه دقیقه‌شمار (عادی)</div>
+                <div class="settings-control"><input type="color" id="minute-hand-picker" value="#64748b"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">عقربه ساعت‌شمار (بازار باز)</div>
+                <div class="settings-control"><input type="color" id="open-hour-hand-picker" value="#10b981"></div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">عقربه دقیقه‌شمار (بازار باز)</div>
+                <div class="settings-control"><input type="color" id="open-minute-hand-picker" value="#34d399"></div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section-title">📊 رنگ تایم‌لاین بازارها (اختصاصی)</div>
+            <div style="display: grid; grid-template-columns: 1fr 60px 60px; gap: 8px; margin-bottom: 15px; align-items: center;">
+                <div style="font-size: 0.8em; font-weight: bold; color: var(--settings-label); text-align: right;">نام بازار</div>
+                <div style="font-size: 0.8em; font-weight: bold; color: var(--settings-label); text-align: center;">باز</div>
+                <div style="font-size: 0.8em; font-weight: bold; color: var(--settings-label); text-align: center;">بسته</div>
+
+                <div style="font-size: 0.9em; font-weight: bold; color: var(--settings-text);">🇦🇺 سیدنی</div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-sydney-open" value="#0072ff"></div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-sydney-closed" value="#94a3b8"></div>
+
+                <div style="font-size: 0.9em; font-weight: bold; color: var(--settings-text);">🇯🇵 توکیو</div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-tokyo-open" value="#f5af19"></div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-tokyo-closed" value="#94a3b8"></div>
+
+                <div style="font-size: 0.9em; font-weight: bold; color: var(--settings-text);">🇬🇧 لندن</div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-london-open" value="#38ef7d"></div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-london-closed" value="#94a3b8"></div>
+
+                <div style="font-size: 0.9em; font-weight: bold; color: var(--settings-text);">🇺🇸 نیویورک</div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-ny-open" value="#8e2de2"></div>
+                <div class="settings-control" style="justify-content: center;"><input type="color" id="tl-ny-closed" value="#94a3b8"></div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section-title">⚙️ سایر تنظیمات</div>
+            <div class="settings-row">
+                <div class="settings-label">نمایش نوار نوسان بازار</div>
+                <div class="settings-control">
+                    <label class="switch"><input type="checkbox" id="show-volatility-toggle" checked/><span class="slider"></span></label>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">نمایش جفت‌ارزهای فعال</div>
+                <div class="settings-control">
+                    <label class="switch"><input type="checkbox" id="show-pairs-toggle" checked/><span class="slider"></span></label>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">فونت ساعت دیجیتال</div>
+                <div class="settings-control">
+                    <select id="digital-font">
+                        <option value="'Courier New'">Courier New</option>
+                        <option value="'Vazirmatn'">Vazirmatn</option>
+                        <option value="'Segoe UI'">Segoe UI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="settings-label">حرکت نرم عقربه‌ها</div>
+                <div class="settings-control">
+                    <label class="switch"><input type="checkbox" id="smooth-move"/><span class="slider"></span></label>
+                </div>
+            </div>
+        </div>
+        <div class="settings-footer">
+            <button id="settings-reset">🔄 بازگردانی به حالت اولیه</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>✨ سشن‌های معاملاتی بازارهای جهانی</h1>
+
+    <div class="tradingview-widget-container" style="margin: 20px auto; max-width: 1280px; width: 96%; border-radius: 24px; overflow: hidden; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+      "symbols": [
+        { "proName": "OANDA:XAUUSD", "title": "طلا (XAU/USD)" },
+        { "proName": "FX:EURUSD", "title": "EUR/USD" },
+        { "proName": "FX:GBPUSD", "title": "GBP/USD" },
+        { "proName": "FX:USDJPY", "title": "USD/JPY" },
+        { "proName": "FX:AUDUSD", "title": "AUD/USD" }
+      ],
+      "showSymbolLogo": true,
+      "isTransparent": true,
+      "displayMode": "adaptive",
+      "colorTheme": "light",
+      "locale": "fa_IR"
+    }
+      </script>
+    </div>
+
+    <div class="clocks-grid" id="clocksContainer"></div>
+
+    <div id="timeline-wrapper">
+        <div id="timeline-graph-wrapper">
+            <div id="timeline-container"></div>
+            <div id="sessions-container-wrapper"></div>
+        </div>
+
+        <div id="volatility-wrapper">
+            <div class="volatility-header">
+                <span>📈 حجم و نوسان احتمالی بازار (۲۴ ساعته)</span>
+                <div class="volatility-legend">
+                    <span class="legend-low">کم نوسان</span>
+                    <span class="legend-med">متوسط</span>
+                    <span class="legend-high">اوج نوسان</span>
+                </div>
+            </div>
+            <div class="volatility-bars-container" id="volatilityBarsContainer"></div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        طراحی شده با ❤️ برای تریدرهای ایرانی | ساعت جهانی فارکس
+    </footer>
+</div>
+
+<script>
+// --- Audio Context and System Setup ---
+let audioCtx;
+function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+['click', 'keydown', 'touchstart'].forEach(evt => document.addEventListener(evt, initAudio, { once: true }));
+
+function playAlarmSound(type) {
+    if (!audioCtx) initAudio();
+    if (audioCtx?.state === 'suspended') audioCtx.resume();
+    if (!audioCtx || audioCtx.state !== 'running') return;
+
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+    const now = audioCtx.currentTime;
+
+    if (type === 'ding') {
+        osc.type = 'sine'; osc.frequency.setValueAtTime(880, now);
+        gainNode.gain.setValueAtTime(1, now); gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1);
+        osc.start(now); osc.stop(now + 1);
+    } else if (type === 'beep') {
+        osc.type = 'square'; osc.frequency.setValueAtTime(440, now);
+        gainNode.gain.setValueAtTime(0.1, now);
+        osc.start(now); osc.stop(now + 0.15);
+        setTimeout(() => {
+            if (!audioCtx || audioCtx.state !== 'running') return;
+            const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain();
+            osc2.type = 'square'; osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
+            gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            osc2.connect(gain2); gain2.connect(audioCtx.destination);
+            osc2.start(audioCtx.currentTime); osc2.stop(audioCtx.currentTime + 0.15);
+        }, 250);
+    } else if (type === 'chime') {
+        [523.25, 659.25, 783.99].forEach((freq, i) => {
+            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = freq; o.connect(g); g.connect(audioCtx.destination);
+            g.gain.setValueAtTime(0.5, now + i*0.1); g.gain.exponentialRampToValueAtTime(0.01, now + i*0.1 + 1.5);
+            o.start(now + i*0.1); o.stop(now + i*0.1 + 1.5);
+        });
+    }
+}
+
+function showToast(marketName, isOpen) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${isOpen ? 'open' : 'closed'}`;
+    const icon = isOpen ? '🟢' : '🔴';
+    const statusText = isOpen ? 'باز شد' : 'بسته شد';
+    const timeNow = new Date().toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
+
+    toast.innerHTML = `
+        <div style="font-size: 1.8em;">${icon}</div>
+        <div style="flex: 1;">
+            <div style="font-size: 1.1em; margin-bottom: 3px;">بازار <b>${marketName}</b> ${statusText}!</div>
+            <div style="font-size: 0.8em; opacity: 0.85; font-weight: 500;">ساعت ${timeNow}</div>
+        </div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 5100);
+}
+
+// --- Data Configuration ---
+const bgPresets = {
+    "royal": "linear-gradient(135deg, #1e1b4b 0%, #312e81 35%, #4c1d95 70%, #5b21b6 100%)",
+    "light-sky": "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%)",
+    "light-cream": "linear-gradient(135deg, #fef9c3 0%, #fef08a 50%, #fde047 100%)",
+    "light-mint": "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%)",
+    "light-peach": "linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fed7aa 100%)",
+    "light-silver": "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)",
+    ocean: "linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%)",
+    midnight: "linear-gradient(135deg, #030712 0%, #090d16 50%, #111827 100%)",
+    emerald: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #10b981 100%)",
+    cyberpunk: "linear-gradient(135deg, #18181b 0%, #27272a 50%, #3f3f46 100%)"
+};
+
+const cities = [
+    { name: 'سیدنی', id: 'sydney', timeZone: 'Australia/Sydney', open: 8, close: 17, pairs: ['AUD/USD', 'NZD/USD', 'AUD/JPY'] },
+    { name: 'توکیو', id: 'tokyo', timeZone: 'Asia/Tokyo', open: 9, close: 18, pairs: ['USD/JPY', 'EUR/JPY', 'GBP/JPY'] },
+    { name: 'لندن', id: 'london', timeZone: 'Europe/London', open: 8, close: 17, pairs: ['EUR/USD', 'GBP/USD', 'EUR/GBP'] },
+    { name: 'نیویورک', id: 'ny', timeZone: 'America/New_York', open: 8, close: 17, pairs: ['EUR/USD', 'GBP/USD', 'USD/CAD'] },
+    { name: 'تهران', id: 'tehran', timeZone: 'Asia/Tehran', open: null, close: null, pairs: ['XAU/USD', 'USD/IRR'] }
+];
+
+const markets = [
+    { id: 'sydney-session', name: 'سیدنی', localName: 'استرالیا', timeZone: 'Australia/Sydney', openHour: 8, closeHour: 17 },
+    { id: 'tokyo-session', name: 'توکیو', localName: 'ژاپن', timeZone: 'Asia/Tokyo', openHour: 9, closeHour: 18 },
+    { id: 'london-session', name: 'لندن', localName: 'بریتانیا', timeZone: 'Europe/London', openHour: 8, closeHour: 17 },
+    { id: 'newyork-session', name: 'نیویورک', localName: 'آمریکا', timeZone: 'America/New_York', openHour: 8, closeHour: 17 }
+];
+
+const tlMarkets = [
+    { id: 'sydney', defOpen: '#0072ff', defClosed: '#94a3b8' },
+    { id: 'tokyo', defOpen: '#f5af19', defClosed: '#94a3b8' },
+    { id: 'london', defOpen: '#38ef7d', defClosed: '#94a3b8' },
+    { id: 'ny', defOpen: '#8e2de2', defClosed: '#94a3b8' }
+];
+
+const utcVolatilityProfile = [45, 40, 35, 30, 35, 45, 70, 85, 80, 80, 80, 85, 100, 100, 95, 90, 75, 60, 45, 35, 25, 30, 35, 45];
+
+let marketOpenColor = localStorage.getItem('market-open-color') || '#2ecc71';
+let marketClosedColor = localStorage.getItem('market-closed-color') || '#e74c3c';
+
+// === Performance caches ===
+// Cache Intl.DateTimeFormat instances (heavy to construct, reusable)
+const _dtfCache = {};
+function _getDtf(opts, tz) {
+    const key = JSON.stringify(opts) + '|' + (tz || '');
+    if (!_dtfCache[key]) _dtfCache[key] = new Intl.DateTimeFormat('en-US', opts);
+    return _dtfCache[key];
+}
+
+// Cache "time in tz" results per (tz, minute) — saves expensive Intl calls each frame
+const _tzTimeCache = new Map();
+function getTimeInTimeZone(tz) {
+    const now = new Date();
+    // Round to nearest 100ms — still smooth enough for hand animation, but
+    // deduplicates the vast majority of repeated calls within a single frame
+    const tKey = Math.floor(now.getTime() / 100) + '|' + tz;
+    if (_tzTimeCache.has(tKey)) return _tzTimeCache.get(tKey);
+    try {
+        const parts = _getDtf({ timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }, tz).formatToParts(now);
+        const res = new Date(now);
+        res.setHours(
+            parseInt(parts.find(p=>p.type==='hour').value),
+            parseInt(parts.find(p=>p.type==='minute').value),
+            parseInt(parts.find(p=>p.type==='second').value),
+            now.getMilliseconds()
+        );
+        // Limit cache growth
+        if (_tzTimeCache.size > 200) _tzTimeCache.clear();
+        _tzTimeCache.set(tKey, res);
+        return res;
+    } catch(e) {
+        return new Date(now.getTime() + now.getTimezoneOffset()*60000);
+    }
+}
+
+// Weekend check is stable per day — cache once per day per tz
+const _weekendCache = {};
+function isWeekendInTimeZone(tz) {
+    const todayKey = new Date().toDateString() + '|' + tz;
+    if (todayKey in _weekendCache) return _weekendCache[todayKey];
+    try {
+        const wd = _getDtf({ timeZone: tz, weekday: 'long' }, tz).format(new Date());
+        const result = wd === 'Saturday' || wd === 'Sunday';
+        _weekendCache[todayKey] = result;
+        return result;
+    } catch(e) {
+        _weekendCache[todayKey] = false;
+        return false;
+    }
+}
+
+// List of "dark" preset keys — these need light text on top
+const _darkPresets = new Set(['royal', 'ocean', 'midnight', 'emerald', 'cyberpunk']);
+
+// Determine if the page should currently render in "dark text on light bg"
+// or "light text on dark bg" mode.
+// Rule: if body has .dark (theme toggle) OR the active preset is a dark preset,
+// then we need light text colors. We apply .dark-preset class for the latter case
+// so it doesn't conflict with the user's explicit theme-toggle choice.
+function _syncDarkPresetClass() {
+    const presetKey = localStorage.getItem('bg-preset') || 'royal';
+    const customGradient = localStorage.getItem('custom-gradient');
+    // Heuristic: custom gradient is dark if it contains low-luminance hex codes
+    // (we just check if "0" appears a lot in the gradient string — cheap and good enough)
+    let isCustomDark = false;
+    if (customGradient) {
+        // Match hex colors and check brightness
+        const hexes = customGradient.match(/#[0-9a-fA-F]{6}/g) || [];
+        if (hexes.length > 0) {
+            const avgLum = hexes.reduce((sum, h) => {
+                const r = parseInt(h.slice(1,3), 16);
+                const g = parseInt(h.slice(3,5), 16);
+                const b = parseInt(h.slice(5,7), 16);
+                return sum + (0.299*r + 0.587*g + 0.114*b);
+            }, 0) / hexes.length;
+            isCustomDark = avgLum < 128;
+        }
+    }
+    const isDarkPreset = _darkPresets.has(presetKey) || isCustomDark;
+
+    // If body.dark is set (user explicitly toggled theme), don't add dark-preset
+    // (dark mode CSS handles everything). Otherwise, sync dark-preset based on preset.
+    if (document.body.classList.contains('dark')) {
+        document.body.classList.remove('dark-preset');
+    } else {
+        document.body.classList.toggle('dark-preset', isDarkPreset);
+    }
+}
+
+function applySelectedBackground() {
+    const customGradient = localStorage.getItem('custom-gradient');
+    const presetKey = localStorage.getItem('bg-preset') || 'royal';
+    const presetSelect = document.getElementById('bg-preset-select');
+    if (presetSelect) presetSelect.value = presetKey;
+    const bgValue = customGradient || bgPresets[presetKey] || bgPresets['royal'];
+    document.body.style.background = bgValue;
+    _syncDarkPresetClass();
+}
+
+// --- Analog Clock Implementation with DOM Caching ---
+class AnalogClock {
+    constructor(cityConfig) {
+        this.city = cityConfig;
+        this.size = 215;
+        this.stroke = 6;
+        this.rad = 112;
+        this.prev = { h: -1, m: -1, s: -1 };
+        this.turns = { h: 0, m: 0, s: 0 };
+        this.lastState = null;
+
+        this.dom = {
+            secondHand: document.getElementById(`second-${this.city.id}`),
+            minuteHand: document.getElementById(`minute-${this.city.id}`),
+            hourHand: document.getElementById(`hour-${this.city.id}`),
+            digitalClock: document.getElementById(`digital-${this.city.id}`),
+            dayName: document.getElementById(`day-${this.city.id}`),
+            status: document.getElementById(`status-${this.city.id}`),
+            remaining: document.getElementById(`remaining-${this.city.id}`),
+            panel: document.getElementById(`panel-${this.city.id}`),
+            trackArc: document.getElementById(`track-arc-${this.city.id}`),
+            dynamicArc: document.getElementById(`dynamic-arc-${this.city.id}`)
+        };
+    }
+
+    updateHands(smoothMove) {
+        const ct = getTimeInTimeZone(this.city.timeZone);
+        const h = ct.getHours(), m = ct.getMinutes(), s = ct.getSeconds(), ms = ct.getMilliseconds();
+        let hd, md, sd;
+
+        if (smoothMove) {
+            hd = (h % 12) * 30 + m * 0.5 + s * (0.5 / 60);
+            md = m * 6 + s * 0.1;
+            sd = s * 6 + ms * 0.006;
+        } else {
+            hd = (h % 12) * 30 + m * 0.5;
+            md = m * 6;
+            sd = s * 6;
+        }
+
+        if (this.prev.s !== -1) {
+            if (sd < this.prev.s - 180) this.turns.s++;
+            if (md < this.prev.m - 180) this.turns.m++;
+            if (hd < this.prev.h - 180) this.turns.h++;
+        }
+        this.prev = { h: hd, m: md, s: sd };
+
+        if (this.dom.secondHand) this.dom.secondHand.style.transform = `translateX(-50%) rotate(${sd + (this.turns.s * 360)}deg)`;
+        if (this.dom.minuteHand) this.dom.minuteHand.style.transform = `translateX(-50%) rotate(${md + (this.turns.m * 360)}deg)`;
+        if (this.dom.hourHand) this.dom.hourHand.style.transform = `translateX(-50%) rotate(${hd + (this.turns.h * 360)}deg)`;
+    }
+
+    updateTextAndStatus() {
+        const ct = getTimeInTimeZone(this.city.timeZone);
+        const h = ct.getHours(), m = ct.getMinutes(), s = ct.getSeconds();
+
+        if (this.dom.digitalClock) {
+            this.dom.digitalClock.style.fontFamily = localStorage.getItem('digital-font') || "'Courier New'";
+            this.dom.digitalClock.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        if (this.dom.dayName) {
+            this.dom.dayName.textContent = ["یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنج‌شنبه","جمعه","شنبه"][ct.getDay()]+" | "+`${ct.getFullYear()}/${(ct.getMonth()+1).toString().padStart(2,'0')}/${ct.getDate().toString().padStart(2,'0')}`;
+        }
+
+        if (this.city.open !== null) {
+            this.cachedWeekend = isWeekendInTimeZone(this.city.timeZone);
+            if (this.cachedWeekend) {
+                this.setStatus(`🔵 تعطیل (آخر هفته)`, ` `, '#3b82f6');
+                this.lastState = 'weekend';
+                this.dom.panel?.classList.remove('market-open-card');
+            } else {
+                this.checkMarketStatus(ct);
+            }
+        } else {
+            this.dom.panel?.style.setProperty('--current-color', 'var(--tehran-color)');
+            this.updateTehranActiveMarkets();
+        }
+    }
+
+    updateTehranActiveMarkets() {
+        let openMarketsList = [];
+        markets.forEach(mk => {
+            if (isWeekendInTimeZone(mk.timeZone)) return;
+            const ct = getTimeInTimeZone(mk.timeZone);
+            const cm = ct.getHours() * 60 + ct.getMinutes();
+            if (cm >= mk.openHour * 60 && cm < mk.closeHour * 60) {
+                openMarketsList.push(mk.name);
+            }
+        });
+
+        if (openMarketsList.length === 0) {
+            if (this.dom.status) this.dom.status.innerHTML = `<span style="color: ${marketClosedColor};">🔴 بازارها بسته هستند</span>`;
+            if (this.dom.remaining) this.dom.remaining.innerHTML = ``;
+            this.dom.panel?.classList.remove('market-open-card');
+        } else {
+            this.dom.panel?.classList.add('market-open-card');
+            if (this.dom.status) this.dom.status.innerHTML = `<span style="color: ${marketOpenColor};">🟢 بازار ${openMarketsList[0]} باز است</span>`;
+            if (this.dom.remaining) {
+                this.dom.remaining.innerHTML = openMarketsList[1] ? `<span style="color: ${marketOpenColor};">🟢 بازار ${openMarketsList[1]} باز است</span>` : ``;
+            }
+        }
+    }
+
+    setStatus(st, rt, col) {
+        if (this.dom.status) this.dom.status.textContent = st;
+        if (this.dom.status) this.dom.status.style.color = col;
+        if (this.dom.remaining) this.dom.remaining.textContent = rt;
+        if (this.dom.remaining) this.dom.remaining.style.color = col;
+        this.dom.panel?.style.setProperty('--current-color', col);
+    }
+
+    checkMarketStatus(ct) {
+        const op = new Date(ct), cl = new Date(ct); op.setHours(this.city.open,0,0,0); cl.setHours(this.city.close,0,0,0); if(cl<=op) cl.setDate(cl.getDate()+1);
+        const nm = ct.getTime(), om = op.getTime(), cm = cl.getTime();
+        const isOpen = (nm >= om && nm < cm);
+
+        this.dom.panel?.classList.toggle('market-open-card', isOpen);
+
+        if (this.lastState !== null && this.lastState !== 'weekend' && this.lastState !== isOpen) {
+            if (localStorage.getItem('alarm-' + this.city.id) !== 'false') {
+                const soundType = localStorage.getItem('alarm-sound') || 'ding';
+                playAlarmSound(soundType);
+                setTimeout(() => playAlarmSound(soundType), 1500);
+                showToast(this.city.name, isOpen);
+            }
+        }
+        this.lastState = isOpen;
+
+        if (isOpen) {
+            const rh = Math.floor((cm-nm)/36e5), rm = Math.floor(((cm-nm)%36e5)/60000);
+            this.setStatus(`🟢 بازار باز است`, `${rh} ساعت و ${rm} دقیقه تا بسته شدن`, marketOpenColor);
+        } else {
+            let nxt = om; if (nm >= om) { const t = new Date(op); t.setDate(op.getDate()+1); nxt = t.getTime(); }
+            const rh = Math.floor((nxt-nm)/36e5), rm = Math.floor(((nxt-nm)%36e5)/60000);
+            this.setStatus(`🔴 بازار بسته است`, `${rh} ساعت و ${rm} دقیقه تا باز شدن`, marketClosedColor);
+        }
+    }
+
+    drawArc(smoothMove = false) {
+        if (!this.dom.trackArc || !this.dom.dynamicArc) return;
+        if (this.cachedWeekend) {
+            this.dom.trackArc.style.display = 'none';
+            this.dom.dynamicArc.style.display = 'none';
+            return;
+        }
+        const ct = getTimeInTimeZone(this.city.timeZone);
+        const openMin = this.city.open * 60;
+        const closeMin = this.city.close * 60;
+        const cmins = smoothMove
+            ? ct.getHours() * 60 + ct.getMinutes() + ct.getSeconds() / 60 + ct.getMilliseconds() / 60000
+            : ct.getHours() * 60 + ct.getMinutes() + ct.getSeconds() / 60;
+
+        const sa = (this.city.open % 12) * 30;
+        const ea = sa + ((closeMin - openMin) * 0.5);
+        const ca = sa + ((cmins - openMin) * 0.5);
+
+        this.dom.trackArc.style.display = '';
+        this.dom.trackArc.setAttribute('d', this._arcPath(sa, ea));
+
+        if (cmins >= openMin && cmins < closeMin) {
+            this.dom.dynamicArc.style.display = '';
+            this.dom.dynamicArc.setAttribute('d', this._arcPath(sa, ca));
+        } else {
+            this.dom.dynamicArc.style.display = 'none';
+        }
+    }
+
+    _arcPath(sa, ea) {
+        const r = this.rad, cx = this.size / 2;
+        const torad = d => (d - 90) * Math.PI / 180;
+        const x1 = cx + r * Math.cos(torad(sa));
+        const y1 = cx + r * Math.sin(torad(sa));
+        const x2 = cx + r * Math.cos(torad(ea));
+        const y2 = cx + r * Math.sin(torad(ea));
+        const largeArc = (ea - sa) > 180 ? 1 : 0;
+        return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`;
+    }
+}
+
+// --- Layout & View Logic ---
+function createClockCard(city, index) {
+    const clockSize = 215, strokeWidth = 6, radius = 112;
+    let svg = `<svg class="clock-arc" viewBox="0 0 ${clockSize} ${clockSize}" preserveAspectRatio="xMidYMid meet"><circle cx="${clockSize/2}" cy="${clockSize/2}" r="${radius}" fill="none" stroke="transparent" stroke-width="${strokeWidth}"/>`;
+    if (city.open !== null) svg += `<path id="track-arc-${city.id}" class="track-arc" fill="none" stroke-linecap="round"/><path id="dynamic-arc-${city.id}" class="progress-arc" fill="none" stroke-linecap="round"/>`;
+    svg += `</svg>`;
+
+    const pairsHtml = city.pairs ? `<div class="pairs-container">${city.pairs.map(p => `<span class="pair-tag">${p}</span>`).join('')}</div>` : '';
+    const panel = document.createElement('div');
+    panel.className = 'city-clock'; panel.id = `panel-${city.id}`; panel.style.animationDelay = `${index * 0.1}s`;
+    panel.setAttribute('draggable', 'true');
+
+    panel.innerHTML = `
+        <button class="panel-close-btn" draggable="false" data-city-id="${city.id}" title="حذف این پنل" aria-label="حذف پنل">×</button>
+        <div class="city-name">${city.name}</div>
+        <div class="clock-scale-wrapper">
+            ${svg}
+            <div class="analog-clock" id="analog-${city.id}">
+                ${(() => {
+                    let marks = '', nums = '';
+                    for(let i=0;i<60;i++){ marks += `<div class="${i%5===0?'minute-mark thick':'minute-mark'}" style="--angle: ${i*6}deg;"></div>`; }
+                    for(let i=1;i<=12;i++){ const r=39, rad=(i-3)*30*Math.PI/180; nums += `<div class="number" style="left:${50+Math.cos(rad)*r}%; top:${50+Math.sin(rad)*r}%">${i}</div>`; }
+                    return marks + nums;
+                })()}
+                <div class="hand hour-hand" id="hour-${city.id}"></div>
+                <div class="hand minute-hand" id="minute-${city.id}"></div>
+                <div class="hand second-hand" id="second-${city.id}"></div>
+                <div class="clock-center"></div>
+            </div>
+        </div>
+        <div class="day-name" id="day-${city.id}"></div>
+        <div class="digital-clock" id="digital-${city.id}">--:--:--</div>
+        <div class="card-middle-content">
+            <div class="market-status" id="status-${city.id}"></div>
+            <div class="market-time-remaining" id="remaining-${city.id}"></div>
+            ${pairsHtml}
+        </div>
+        <div class="timezone">${city.timeZone}</div>
+    `;
+
+    panel.querySelector('.panel-close-btn')?.addEventListener('click', function(e) {
+        e.stopPropagation();
+        panel.classList.add('hidden-clock');
+        localStorage.setItem(`show-clock-${city.id}`, 'false');
+        const toggleSwitch = document.getElementById(`toggle-clock-${city.id}`);
+        if(toggleSwitch) toggleSwitch.checked = false;
+        _visibleClocksCacheDirty = true; // invalidate cache
+        setTimeout(updateClockSizes, 50);
+    });
+
+    return panel;
+}
+
+function initMarketToggles() {
+    const grid = document.getElementById('market-toggles-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    cities.forEach(city => {
+        const isVisible = localStorage.getItem(`show-clock-${city.id}`) !== 'false';
+        const container = document.createElement('div');
+        container.className = 'switch-container';
+        container.innerHTML = `
+            <label class="switch">
+                <input type="checkbox" id="toggle-clock-${city.id}" ${isVisible ? 'checked' : ''} data-city-id="${city.id}"/>
+                <span class="slider"></span>
+            </label>
+            <span class="switch-label">${city.name}</span>
+        `;
+        grid.appendChild(container);
+    });
+
+    grid.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.addEventListener('change', function() {
+            localStorage.setItem(`show-clock-${this.dataset.cityId}`, this.checked);
+            applyClockVisibility();
+        });
+    });
+}
+
+function applyClockVisibility() {
+    cities.forEach(city => {
+        const isVisible = localStorage.getItem(`show-clock-${city.id}`) !== 'false';
+        document.getElementById(`panel-${city.id}`)?.classList.toggle('hidden-clock', !isVisible);
+    });
+    _visibleClocksCacheDirty = true; // invalidate cache
+    setTimeout(updateClockSizes, 50);
+}
+
+// Cached list of visible clock elements — refreshed when visibility changes
+let _visibleClocksCache = null;
+let _visibleClocksCacheDirty = true;
+function _getVisibleClocks() {
+    if (_visibleClocksCacheDirty || !_visibleClocksCache) {
+        _visibleClocksCache = document.querySelectorAll('.city-clock:not(.hidden-clock)');
+        _visibleClocksCacheDirty = false;
+    }
+    return _visibleClocksCache;
+}
+
+function updateClockSizes() {
+    _getVisibleClocks().forEach(clock => {
+        const wrap = clock.querySelector('.clock-scale-wrapper');
+        if (!wrap) return;
+        const scale = Math.min((clock.offsetWidth - 20) / 235, 1);
+        const sz = scale < 1 ? 215 * scale : 215;
+        // Use cssText for fewer style writes
+        wrap.style.cssText = `width:${sz}px;height:${sz}px;`;
+        const arc = wrap.querySelector('.clock-arc');
+        if (arc) arc.style.cssText = `width:${sz}px;height:${sz}px;`;
+        const an = wrap.querySelector('.analog-clock');
+        if (an) {
+            if (scale < 1) an.style.cssText = `width:${sz}px;height:${sz}px;`;
+            else { an.style.width = '100%'; an.style.height = '100%'; }
+        }
+        // Set hand heights (3 quick style writes)
+        const h = wrap.querySelector('.hour-hand');
+        const m = wrap.querySelector('.minute-hand');
+        const s = wrap.querySelector('.second-hand');
+        const c = wrap.querySelector('.clock-center');
+        if (h) h.style.height = `${60*scale}px`;
+        if (m) m.style.height = `${75*scale}px`;
+        if (s) s.style.height = `${85*scale}px`;
+        if (c) { c.style.width = `${12*scale}px`; c.style.height = `${12*scale}px`; }
+        // Numbers — use a single forEach with all props set together
+        const nums = wrap.querySelectorAll('.number');
+        const sz24 = 24*scale, fs14 = 14*scale;
+        nums.forEach(n => {
+            n.style.width = `${sz24}px`;
+            n.style.height = `${sz24}px`;
+            n.style.lineHeight = `${sz24}px`;
+            n.style.fontSize = `${fs14}px`;
+        });
+        // Minute marks
+        const marks = wrap.querySelectorAll('.minute-mark');
+        const wThick = `${3*scale}px`, hThick = `${10*scale}px`;
+        const wThin = `${1.5*scale}px`, hThin = `${6*scale}px`;
+        const translateY = `-${95*scale}px`;
+        marks.forEach(mk => {
+            const tk = mk.classList.contains('thick');
+            mk.style.width = tk ? wThick : wThin;
+            mk.style.height = tk ? hThick : hThin;
+            mk.style.transform = `translate(-50%, -50%) rotate(${mk.style.getPropertyValue('--angle')}) translateY(${translateY})`;
+        });
+    });
+}
+
+// --- Drag and Drop ---
+let draggedItem = null;
+function initDragAndDrop() {
+    const container = document.getElementById('clocksContainer');
+    if (!container) return;
+
+    container.addEventListener('dragstart', (e) => {
+        draggedItem = e.target.closest('.city-clock');
+        if (draggedItem) setTimeout(() => draggedItem.classList.add('dragging'), 0);
+    });
+
+    container.addEventListener('dragend', (e) => {
+        if (draggedItem) {
+            draggedItem.classList.remove('dragging');
+            draggedItem = null;
+            const order = Array.from(container.children).map(el => el.id.replace('panel-', ''));
+            localStorage.setItem('clock-order', JSON.stringify(order));
+        }
+    });
+
+    container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!draggedItem) return;
+        draggedItem.style.visibility = 'hidden';
+        const afterElement = document.elementFromPoint(e.clientX, e.clientY)?.closest('.city-clock');
+        draggedItem.style.visibility = '';
+
+        if (afterElement && afterElement !== draggedItem && afterElement.parentNode === container) {
+            const box = afterElement.getBoundingClientRect();
+            if (e.clientX - box.left - box.width / 2 < 0) container.insertBefore(draggedItem, afterElement);
+            else container.insertBefore(draggedItem, afterElement.nextSibling);
+        } else if (!afterElement) container.appendChild(draggedItem);
+    });
+}
+
+// --- Dynamic Timeline and Volatility Graph ---
+// Cache the system↔TZ offset per tz (stable per browser session unless DST shifts)
+const _offsetCache = {};
+function getSystemOffsetForTimeZone(tz) {
+    if (tz in _offsetCache) return _offsetCache[tz];
+    const now = new Date();
+    const sysParts = _getDtf({ hour12: false, hour: '2-digit', minute: '2-digit' }).formatToParts(now);
+    const sysMin = parseInt(sysParts.find(p=>p.type==='hour').value)*60 + parseInt(sysParts.find(p=>p.type==='minute').value);
+    const tzParts = _getDtf({ timeZone: tz, hour12: false, hour: '2-digit', minute: '2-digit' }, tz).formatToParts(now);
+    const tzMin = parseInt(tzParts.find(p=>p.type==='hour').value)*60 + parseInt(tzParts.find(p=>p.type==='minute').value);
+    let diff = sysMin - tzMin;
+    if (diff > 720) diff -= 1440;
+    if (diff < -720) diff += 1440;
+    _offsetCache[tz] = diff;
+    return diff;
+}
+
+function getMarketLocalSegments(mk) {
+    const diff = getSystemOffsetForTimeZone(mk.timeZone);
+    let s = (mk.openHour * 60 + diff) % 1440; if (s < 0) s += 1440;
+    let e = (mk.closeHour * 60 + diff) % 1440; if (e < 0) e += 1440;
+    return s < e ? [{ start: s, end: e }] : [{ start: s, end: 1440 }, { start: 0, end: e }];
+}
+
+// === Compute all daily overlap zones between markets ===
+// Cached per minute (results only change when weekend status changes)
+let _overlapZonesCache = null;
+let _overlapZonesCacheKey = '';
+function computeDailyOverlapZones() {
+    // Cache key: today's date string. Weekend status is stable per day.
+    const cacheKey = new Date().toDateString();
+    if (_overlapZonesCacheKey === cacheKey && _overlapZonesCache) {
+        return _overlapZonesCache;
+    }
+    const entries = [];
+    markets.forEach(mk => {
+        if (isWeekendInTimeZone(mk.timeZone)) return;
+        getMarketLocalSegments(mk).forEach(seg => {
+            entries.push({ market: mk, seg });
+        });
+    });
+    if (entries.length < 2) {
+        _overlapZonesCache = [];
+        _overlapZonesCacheKey = cacheKey;
+        return [];
+    }
+    const points = new Set();
+    entries.forEach(({ seg }) => { points.add(seg.start); points.add(seg.end); });
+    const sorted = [...points].sort((a, b) => a - b);
+
+    const zones = [];
+    for (let i = 0; i < sorted.length - 1; i++) {
+        const segStart = sorted[i], segEnd = sorted[i + 1];
+        if (segEnd <= segStart) continue;
+        const mid = (segStart + segEnd) / 2;
+        const openMkts = entries
+            .filter(({ seg }) => mid >= seg.start && mid < seg.end)
+            .map(({ market }) => market);
+        if (openMkts.length >= 2) {
+            const last = zones[zones.length - 1];
+            const sameSet = last && last.markets.length === openMkts.length &&
+                last.markets.every(m => openMkts.some(o => o.id === m.id));
+            if (sameSet) {
+                last.end = segEnd;
+            } else {
+                zones.push({
+                    start: segStart,
+                    end: segEnd,
+                    markets: openMkts,
+                    level: openMkts.length
+                });
+            }
+        }
+    }
+    _overlapZonesCache = zones;
+    _overlapZonesCacheKey = cacheKey;
+    return zones;
+}
+
+function fmtLocalTime(mins) {
+    const h = Math.floor(mins / 60) % 24;
+    const m = Math.floor(mins % 60);
+    return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+}
+
+function buildOverlapZonesUI() {
+    const ruler = document.getElementById('timeline-container');
+    if (!ruler) return;
+    // Remove any existing overlap bands (but keep hours/ticks/indicator)
+    ruler.querySelectorAll('.ruler-overlap-band').forEach(el => el.remove());
+
+    const zones = computeDailyOverlapZones();
+    if (zones.length === 0) return;
+
+    zones.forEach((zone, idx) => {
+        const band = document.createElement('div');
+        band.className = `ruler-overlap-band level-${Math.min(zone.level, 3)}`;
+        band.id = `ruler-overlap-band-${idx}`;
+        band.style.left = `${(zone.start / 1440) * 100}%`;
+        band.style.width = `${((zone.end - zone.start) / 1440) * 100}%`;
+        // Hidden by default — only the band containing the current time will be shown
+        band.style.display = 'none';
+
+        // Tooltip on hover — minimal, just time range (no market names per user request)
+        band.addEventListener('mouseenter', () => {
+            const tp = document.createElement('div');
+            tp.className = 'session-tooltip';
+            tp.id = `ruler-overlap-tp-${idx}`;
+            const duration = zone.end - zone.start;
+            const dH = Math.floor(duration / 60), dM = duration % 60;
+            tp.innerHTML = `
+                <div style="color:#1e293b;font-weight:900;margin-bottom:3px;">⚡ همپوشانی بازارها</div>
+                <div style="color:#475569;">ساعت: ${fmtLocalTime(zone.start)} تا ${fmtLocalTime(zone.end)}</div>
+                <div style="color:#10b981;font-weight:900;margin-top:2px;">مدت: ${dH} ساعت و ${dM} دقیقه</div>
+            `;
+            document.body.appendChild(tp);
+            const br = band.getBoundingClientRect(), tr = tp.getBoundingClientRect();
+            tp.style.top = `${br.top - tr.height - 8}px`;
+            tp.style.left = `${Math.max(8, Math.min(window.innerWidth - tr.width - 8, br.left + (br.width/2) - (tr.width/2)))}px`;
+            tp.style.opacity = '1'; tp.style.visibility = 'visible';
+        });
+        band.addEventListener('mouseleave', () => {
+            document.getElementById(`ruler-overlap-tp-${idx}`)?.remove();
+        });
+
+        ruler.appendChild(band);
+    });
+}
+
+function updateOverlapLiveState() {
+    const now = new Date();
+    const currentMin = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+    const ruler = document.getElementById('timeline-container');
+    if (!ruler) return;
+
+    // Hide all bands first (cheap when only 2-3 bands exist)
+    ruler.querySelectorAll('.ruler-overlap-band').forEach(b => {
+        b.style.display = 'none';
+        b.classList.remove('is-active');
+    });
+
+    // Use cached zones (only re-computed when day changes)
+    const zones = computeDailyOverlapZones();
+    let activeZoneIdx = -1;
+    for (let i = 0; i < zones.length; i++) {
+        if (currentMin >= zones[i].start && currentMin < zones[i].end) {
+            activeZoneIdx = i;
+            break;
+        }
+    }
+
+    if (activeZoneIdx >= 0) {
+        const bandEl = document.getElementById(`ruler-overlap-band-${activeZoneIdx}`);
+        if (bandEl) {
+            bandEl.style.display = '';
+            bandEl.classList.add('is-active');
+        }
+    }
+}
+
+function buildTimeline() {
+    const cont = document.getElementById('timeline-container'), wrap = document.getElementById('sessions-container-wrapper'), volCont = document.getElementById('volatilityBarsContainer');
+    if(!cont || !wrap || !volCont) return;
+    cont.innerHTML = ''; wrap.innerHTML = ''; volCont.innerHTML = '';
+    buildOverlapZonesUI();
+
+    // Use DocumentFragment to batch DOM writes (single reflow instead of 25+)
+    const fragCont = document.createDocumentFragment();
+    for(let i=0; i<=24; i++){
+        const s=document.createElement('span'); s.className='timeline-hour'; s.textContent=i; s.style.left=`${(i/24)*100}%`;
+        fragCont.appendChild(s);
+    }
+    for(let i=0; i<288; i++){
+        const t=document.createElement('div'); t.className=(i%12===0)?'timeline-tick-major':'timeline-tick'; t.style.left=`${(i/288)*100}%`;
+        fragCont.appendChild(t);
+    }
+    const ind=document.createElement('div'); ind.id='timeline-indicator';
+    fragCont.appendChild(ind);
+    cont.appendChild(fragCont);
+
+    // Build all session blocks in a fragment first
+    const fragWrap = document.createDocumentFragment();
+    markets.forEach(mk => {
+        const c=document.createElement('div'); c.className='sessions-container';
+        const marketIdShort = mk.id.split('-')[0]; // precompute once
+        getMarketLocalSegments(mk).forEach(seg => {
+            const b=document.createElement('div'); b.className=`session-block session-${marketIdShort}`; b.id=`${mk.id}-${seg.start}`;
+            const tp=document.createElement('div'); tp.className=`session-tooltip ${mk.id}-tooltip`;
+            // Use a single shared mouseenter/mouseleave handler factory to avoid closures duplication
+            b.addEventListener('mouseenter', () => {
+                const n=new Date();
+                const tP=_getDtf({timeZone:mk.timeZone,hour:'2-digit',minute:'2-digit',hour12:false}, mk.timeZone).formatToParts(n);
+                const uP=_getDtf({hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(n);
+                let off= (parseInt(uP.find(p=>p.type==='hour').value)*60+parseInt(uP.find(p=>p.type==='minute').value)) - (parseInt(tP.find(p=>p.type==='hour').value)*60+parseInt(tP.find(p=>p.type==='minute').value));
+                if(off<0) off+=1440;
+                const uO=(mk.openHour*60+off)%1440, uC=(mk.closeHour*60+off)%1440;
+                const ut = { o:`${Math.floor(uO/60).toString().padStart(2,'0')}:${(uO%60).toString().padStart(2,'0')}`, c:`${Math.floor(uC/60).toString().padStart(2,'0')}:${(uC%60).toString().padStart(2,'0')}` };
+
+                tp.innerHTML = isWeekendInTimeZone(mk.timeZone) ? `<div style="color:#e74c3c;font-weight:bold;">تعطیل</div>` : `<div style="color:#3b82f6;">${mk.openHour}:00 - ${mk.closeHour}:00 (${mk.localName})</div><div>${ut.o} - ${ut.c} (سیستم شما)</div>`;
+                tp.style.opacity='1'; tp.style.visibility='visible';
+                const br=b.getBoundingClientRect(), tr=tp.getBoundingClientRect();
+                tp.style.top=`${br.top - tr.height - 10}px`; tp.style.left=`${br.left+(br.width/2)-(tr.width/2)}px`;
+            });
+            b.addEventListener('mouseleave', ()=>{ tp.style.opacity='0'; tp.style.visibility='hidden'; });
+            c.appendChild(b);
+            b.style.left = `${(seg.start / 1440) * 100}%`; b.style.width = `${((seg.end - seg.start) / 1440) * 100}%`;
+            // Append tooltip to body via fragment-friendly approach (tooltips must be at body level)
+            document.body.appendChild(tp);
+        });
+        fragWrap.appendChild(c);
+    });
+    wrap.appendChild(fragWrap);
+
+    // Volatility bars - batch into fragment
+    const fragVol = document.createDocumentFragment();
+    const systemOffsetHours = -new Date().getTimezoneOffset() / 60;
+    const volGradients = {
+        high: 'linear-gradient(180deg, #10b981, #059669)',
+        med:  'linear-gradient(180deg, #f59e0b, #d97706)',
+        low:  'linear-gradient(180deg, #ef4444, #dc2626)'
+    };
+    for (let localH = 0; localH < 24; localH++) {
+        let utcH = Math.floor((localH - systemOffsetHours) % 24); if (utcH < 0) utcH += 24;
+        const volValue = utcVolatilityProfile[utcH];
+        const bar = document.createElement('div');
+        bar.className = 'vol-bar'; bar.id = `vol-bar-${localH}`;
+        bar.style.height = `${Math.max(volValue, 15)}%`;
+        bar.style.left = `calc(${(localH / 24) * 100}% + 1px)`;
+        bar.style.width = `calc(${(1 / 24) * 100}% - 2px)`;
+        bar.style.background = volValue >= 75 ? volGradients.high : (volValue >= 50 ? volGradients.med : volGradients.low);
+        fragVol.appendChild(bar);
+    }
+    volCont.appendChild(fragVol);
+}
+
+// Cache for session-block DOM refs (avoids document.getElementById every second)
+const _sessionBlockCache = new Map();
+function _getSessionBlock(id) {
+    if (_sessionBlockCache.has(id)) return _sessionBlockCache.get(id);
+    const el = document.getElementById(id);
+    if (el) _sessionBlockCache.set(id, el);
+    return el;
+}
+
+function updateTimeline(){
+    const now = new Date();
+    const currentMin = now.getHours() * 60 + now.getMinutes() + (now.getSeconds() / 60);
+    let activeSegments = [];
+
+    markets.forEach(mk => {
+        const marketIdShort = mk.id.split('-')[0];
+        getMarketLocalSegments(mk).forEach(seg => {
+            const b = _getSessionBlock(`${mk.id}-${seg.start}`); if (!b) return;
+            if (isWeekendInTimeZone(mk.timeZone)) {
+                b.className = `session-block session-${marketIdShort} weekend-closed`;
+                b.textContent = `${mk.name} : تعطیل (آخر هفته)`;
+            } else {
+                const ct = getTimeInTimeZone(mk.timeZone), cm = ct.getHours()*60+ct.getMinutes(), om = mk.openHour*60, cm2 = mk.closeHour*60;
+                const isO = (cm >= om && cm < cm2);
+                const rm = isO ? cm2 - cm : (cm < om ? om - cm : (1440 - cm) + om);
+                b.className = `session-block session-${marketIdShort} ${isO ? 'open' : 'closed'}`;
+                b.textContent = `${mk.name} ${isO ? 'باز است' : 'بسته است'} (${Math.floor(rm/60)} ساعت و ${rm%60} دقیقه ${isO ? 'تا بسته شدن بازار' : 'تا باز شدن بازار'})`;
+                if (isO) activeSegments.push(seg);
+            }
+        });
+    });
+
+    const ind = document.getElementById('timeline-indicator');
+    if (ind) {
+        ind.style.left = `${((now.getHours()*3600 + now.getMinutes()*60 + now.getSeconds()) / 86400) * 100}%`;
+        ind.setAttribute('data-time', `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`);
+    }
+
+    updateOverlapLiveState();
+
+    // Use a cached list of vol-bars if possible
+    const volBars = document.querySelectorAll('.vol-bar');
+    volBars.forEach(b => b.classList.remove('active-hour'));
+    const activeBar = _getSessionBlock(`vol-bar-${now.getHours()}`);
+    if (activeBar) activeBar.classList.add('active-hour');
+}
+
+function updateDateBox(){
+    const d=new Date(), gy=d.getFullYear(), gm=d.getMonth()+1, gd=d.getDate(), g2=gm>2?gy+1:gy;
+    let ds=355666+(365*gy)+Math.floor((g2+3)/4)-Math.floor((g2+99)/100)+Math.floor((g2+399)/400)+gd;
+    for(let i=0; i<gm-1; i++) ds+=[31,28,31,30,31,30,31,31,30,31,30,31][i];
+    let jy=-1595+(33*Math.floor(ds/12053)); ds%=12053; jy+=4*Math.floor(ds/1461); ds%=1461;
+    if(ds>365){jy+=Math.floor((ds-1)/365); ds=(ds-1)%365;}
+    let jm=ds<186?1+Math.floor(ds/31):7+Math.floor((ds-186)/30), jd=ds<186?1+(ds%31):1+((ds-186)%30);
+
+    const jEl = document.getElementById("jalali-date"), gEl = document.getElementById("gregorian-date");
+    if(jEl) jEl.textContent = `${['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'][d.getDay()]} ${jd} ${['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'][jm-1]} ${jy}`;
+    if(gEl) gEl.textContent = `${gd} ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]} ${gy}`;
+}
+
+// --- Init & Event Listeners ---
+function loadAllSettings() {
+    ['sydney','tokyo','london','ny'].forEach(k => {
+        const el = document.getElementById('alarm-'+k);
+        if(el) { el.checked = localStorage.getItem('alarm-'+k)!=='false'; el.addEventListener('change', function() { localStorage.setItem('alarm-'+k, this.checked); }); }
+    });
+    const soundEl = document.getElementById('alarm-sound');
+    if(soundEl) {
+        soundEl.value = localStorage.getItem('alarm-sound') || "ding";
+        soundEl.addEventListener('change', function() { localStorage.setItem('alarm-sound', this.value); playAlarmSound(this.value); });
+    }
+    const pairsToggle = document.getElementById('show-pairs-toggle');
+    if(pairsToggle) {
+        pairsToggle.checked = localStorage.getItem('show-currency-pairs') !== 'false'; document.body.classList.toggle('hide-pairs', !pairsToggle.checked);
+        pairsToggle.addEventListener('change', function() { localStorage.setItem('show-currency-pairs', this.checked); document.body.classList.toggle('hide-pairs', !this.checked); });
+    }
+    const volToggle = document.getElementById('show-volatility-toggle');
+    if(volToggle) {
+        volToggle.checked = localStorage.getItem('show-market-volatility') !== 'false'; document.body.classList.toggle('hide-volatility', !volToggle.checked);
+        volToggle.addEventListener('change', function() { localStorage.setItem('show-market-volatility', this.checked); document.body.classList.toggle('hide-volatility', !this.checked); });
+    }
+    const fontEl = document.getElementById('digital-font');
+    if(fontEl) { fontEl.value = localStorage.getItem('digital-font') || "'Courier New'"; fontEl.addEventListener('change', function() { localStorage.setItem('digital-font', this.value); }); }
+    const smoothEl = document.getElementById('smooth-move');
+    if(smoothEl) { smoothEl.checked = localStorage.getItem('clock-smooth-mode') !== 'tick'; smoothEl.addEventListener('change', function() { localStorage.setItem('clock-smooth-mode', this.checked ? 'smooth' : 'tick'); }); }
+
+    const syncColor = (id, storageKey, cssVar, def) => {
+        const val = localStorage.getItem(storageKey) || def; document.documentElement.style.setProperty(cssVar, val);
+        const p = document.getElementById(id); if(p) p.value = val;
+    };
+    syncColor('digital-bg-picker', 'digital-bg-color', '--digital-bg', '#fceea7');
+    syncColor('digital-border-picker', 'digital-border-color', '--digital-border', '#4b5563');
+    tlMarkets.forEach(m => { syncColor(`tl-${m.id}-open`, `tl-${m.id}-open-color`, `--timeline-${m.id}-open`, m.defOpen); syncColor(`tl-${m.id}-closed`, `tl-${m.id}-closed-color`, `--timeline-${m.id}-closed`, m.defClosed); });
+    syncColor('hour-hand-picker', 'hour-hand-color', '--hour-hand-color', '#1e293b');
+    syncColor('minute-hand-picker', 'minute-hand-color', '--minute-hand-color', '#64748b');
+    syncColor('open-hour-hand-picker', 'open-hour-hand-color', '--open-hour-hand-color', '#10b981');
+    syncColor('open-minute-hand-picker', 'open-minute-hand-color', '--open-minute-hand-color', '#34d399');
+
+    document.getElementById('market-open-picker').value = marketOpenColor;
+    document.getElementById('market-closed-picker').value = marketClosedColor;
+    applySelectedBackground();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const initialTheme = localStorage.getItem('theme-mode') || ((new Date().getHours() >= 21 || new Date().getHours() < 6) ? 'dark' : 'light');
+    document.body.classList.toggle('dark', initialTheme === 'dark');
+    document.getElementById('moonCrescent').style.display = initialTheme === 'dark' ? 'block' : 'none';
+    document.getElementById('darkLines').style.display = initialTheme === 'light' ? 'block' : 'none';
+
+    document.getElementById('theme-toggle-btn').onclick = () => {
+        const nextDark = !document.body.classList.contains('dark');
+        document.body.classList.toggle('dark', nextDark);
+        localStorage.setItem('theme-mode', nextDark ? 'dark' : 'light');
+        document.getElementById('moonCrescent').style.display = nextDark ? 'block' : 'none';
+        document.getElementById('darkLines').style.display = nextDark ? 'none' : 'block';
+        applySelectedBackground();
+    };
+
+    document.getElementById('calendar-btn').onclick = () => window.open('https://www.forexfactory.com/calendar?day=today', '_blank');
+    document.getElementById('settings-btn').onclick = () => document.getElementById('settings-modal').style.display = "block";
+    document.querySelectorAll('.modal-close').forEach(b => b.onclick = function() { document.getElementById(this.getAttribute('data-close')).style.display = "none"; });
+    window.onclick = e => { if (e.target.classList.contains('modal')) e.target.style.display = "none"; };
+
+    document.getElementById('bg-preset-select').addEventListener('change', function() {
+        localStorage.setItem('bg-preset', this.value); localStorage.removeItem('custom-gradient'); applySelectedBackground();
+    });
+
+    ['custom-color-1', 'custom-color-2', 'custom-color-3', 'gradient-angle'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', () => {
+            const gradVal = `linear-gradient(${document.getElementById('gradient-angle').value}, ${document.getElementById('custom-color-1').value} 0%, ${document.getElementById('custom-color-2').value} 50%, ${document.getElementById('custom-color-3').value} 100%)`;
+            localStorage.setItem('custom-gradient', gradVal); localStorage.removeItem('bg-preset'); document.body.style.background = gradVal;
+        });
+    });
+
+    const bindColorInput = (id, storageKey, cssVar, cb) => {
+        document.getElementById(id)?.addEventListener('input', function() {
+            localStorage.setItem(storageKey, this.value); if(cssVar) document.documentElement.style.setProperty(cssVar, this.value); if(cb) cb(this.value);
+        });
+    };
+    bindColorInput('digital-bg-picker', 'digital-bg-color', '--digital-bg');
+    bindColorInput('digital-border-picker', 'digital-border-color', '--digital-border');
+    tlMarkets.forEach(m => { bindColorInput(`tl-${m.id}-open`, `tl-${m.id}-open-color`, `--timeline-${m.id}-open`); bindColorInput(`tl-${m.id}-closed`, `tl-${m.id}-closed-color`, `--timeline-${m.id}-closed`); });
+    bindColorInput('market-open-picker', 'market-open-color', null, v => marketOpenColor = v);
+    bindColorInput('market-closed-picker', 'market-closed-color', null, v => marketClosedColor = v);
+    bindColorInput('hour-hand-picker', 'hour-hand-color', '--hour-hand-color');
+    bindColorInput('minute-hand-picker', 'minute-hand-color', '--minute-hand-color');
+    bindColorInput('open-hour-hand-picker', 'open-hour-hand-color', '--open-hour-hand-color');
+    bindColorInput('open-minute-hand-picker', 'open-minute-hand-color', '--open-minute-hand-color');
+
+    document.getElementById('settings-reset').onclick = () => {
+        // 1) Close all modals first
+        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        // 2) Remove all body classes (dark, dark-preset, hide-pairs, hide-volatility)
+        document.body.className = '';
+        // 3) Clear all CSS custom properties that might have been set from localStorage
+        const root = document.documentElement;
+        root.style.cssText = '';
+        // 4) Clear inline styles on body (background etc.)
+        document.body.style.cssText = '';
+        // 5) Wipe localStorage completely
+        try {
+            localStorage.clear();
+        } catch(e) { /* ignore */ }
+        // 6) Force a hard reload (bypass cache) to ensure clean state
+        location.reload(true);
+    };
+
+    // Scroll to top button logic (throttled version below — keeps just the click handler here)
+    const scrollTopBtn = document.getElementById('scroll-top-btn');
+    scrollTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key === 't' || e.key === 'T') document.getElementById('theme-toggle-btn').click();
+        else if (e.key === 's' || e.key === 'S') document.getElementById('settings-btn').click();
+        else if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    });
+
+    const cc = document.getElementById('clocksContainer');
+    if(cc) {
+        cc.innerHTML = ''; cities.forEach((c,i) => cc.appendChild(createClockCard(c,i)));
+        const savedOrder = JSON.parse(localStorage.getItem('clock-order') || '[]');
+        if (savedOrder.length > 0) {
+            const panels = {}; Array.from(cc.children).forEach(el => panels[el.id.replace('panel-', '')] = el);
+            savedOrder.forEach(id => { if (panels[id]) { cc.appendChild(panels[id]); delete panels[id]; } });
+            Object.keys(panels).forEach(id => cc.appendChild(panels[id]));
+        }
+    }
+
+    initMarketToggles(); initDragAndDrop(); loadAllSettings(); applyClockVisibility();
+    setTimeout(updateClockSizes, 100);
+
+    // Throttled resize handler — avoid running expensive updateClockSizes on every resize event
+    let _resizeTimer = null;
+    let _resizeRaf = null;
+    window.addEventListener('resize', () => {
+        if (_resizeRaf) cancelAnimationFrame(_resizeRaf);
+        _resizeRaf = requestAnimationFrame(() => {
+            _resizeRaf = null;
+            updateClockSizes();
+            // buildTimeline is heavy — only run after resize ends (debounced)
+            if (_resizeTimer) clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(() => {
+                _sessionBlockCache.clear(); // invalidate cache since DOM is rebuilt
+                buildTimeline();
+                updateTimeline();
+            }, 250);
+        });
+    });
+
+    // Throttled scroll handler for scroll-top button visibility
+    let _scrollRaf = null;
+    window.addEventListener('scroll', () => {
+        if (_scrollRaf) return;
+        _scrollRaf = requestAnimationFrame(() => {
+            _scrollRaf = null;
+            if (window.pageYOffset > 300) scrollTopBtn.classList.add('visible');
+            else scrollTopBtn.classList.remove('visible');
+        });
+    });
+
+    buildTimeline();
+    const clks = cities.map(c => new AnalogClock(c));
+
+    // Single animation loop using requestAnimationFrame — combined hand+arc update
+    // Skips rendering when tab is hidden (saves CPU)
+    function animationLoop() {
+        const smoothMode = localStorage.getItem('clock-smooth-mode') !== 'tick';
+        if (!document.hidden) {
+            const len = clks.length;
+            for (let i = 0; i < len; i++) {
+                const c = clks[i];
+                c.updateHands(smoothMode);
+                if (c.city.open !== null) c.drawArc(smoothMode);
+            }
+        }
+        if (smoothMode) requestAnimationFrame(animationLoop);
+        else setTimeout(animationLoop, 1000);
+    }
+
+    // State/text loop — 1 Hz, decoupled from smooth hand animation
+    function stateAndTextLoop() {
+        if (!document.hidden) {
+            const len = clks.length;
+            for (let i = 0; i < len; i++) clks[i].updateTextAndStatus();
+            updateTimeline();
+        }
+        setTimeout(stateAndTextLoop, 1000);
+    }
+
+    animationLoop();
+    stateAndTextLoop();
+    updateDateBox(); setInterval(updateDateBox, 30000);
+});
+</script>
+</body>
+</html>
