@@ -1,0 +1,15 @@
+# robots.txt for ساعت جهانی فارکس
+# Allow all crawlers full access
+User-agent: *
+Allow: /
+
+# Block access to dotfiles and config files
+Disallow: /*.json$
+Disallow: /*.md$
+Disallow: /.*$
+
+# Allow access to sitemap
+Sitemap: https://razoromooz.github.io/sessions/sitemap.xml
+
+# Crawl delay to be polite
+Crawl-delay: 1
