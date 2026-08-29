@@ -72,27 +72,28 @@ body::before {
 }
 
 .back-btn {
-    position: absolute;
-    top: 25px;
-    right: 25px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     background: rgba(99, 102, 241, 0.2);
     color: #c4b5fd;
     border: 1px solid rgba(99, 102, 241, 0.4);
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 12px;
     text-decoration: none;
-    font-size: 0.85em;
+    font-size: 0.9em;
     font-weight: 700;
     transition: all 0.3s var(--bounce);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    margin-bottom: 20px;
+    z-index: 10;
 }
 
 .back-btn:hover {
     background: var(--secondary);
     color: white;
     transform: translateX(-3px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
 .header {
@@ -136,14 +137,17 @@ body::before {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    padding: 25px 22px;
-    margin-bottom: 35px;
-    line-height: 1.9;
+    padding: 22px 24px;
+    margin-bottom: 30px;
+    line-height: 2;
     font-size: 1em;
     color: #e2e8f0;
     white-space: pre-wrap;
     word-wrap: break-word;
+    overflow-wrap: break-word;
     position: relative;
+    text-align: right;
+    direction: rtl;
 }
 
 .message-section::before {
@@ -175,79 +179,84 @@ body::before {
 }
 
 .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .contact-card {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 16px 18px;
+    padding: 10px 18px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    border-radius: 12px;
     text-decoration: none;
     color: #f8fafc;
-    transition: all 0.35s var(--bounce);
+    transition: all 0.3s var(--bounce);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .contact-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
     background: var(--c-color, var(--secondary));
-    opacity: 0.7;
+    opacity: 0.8;
     transition: all 0.3s;
 }
 
 .contact-card:hover {
-    transform: translateY(-5px);
+    transform: translateX(-4px);
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--c-color, var(--secondary));
-    box-shadow: 0 15px 30px var(--shadow), 0 0 25px var(--c-color, var(--secondary));
+    box-shadow: 0 8px 20px var(--shadow), 0 0 15px var(--c-color, var(--secondary));
 }
 
 .contact-card:hover::before {
+    width: 6px;
     opacity: 1;
-    height: 5px;
 }
 
 .contact-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: var(--c-color, var(--secondary));
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     flex-shrink: 0;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .contact-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .contact-label {
-    font-size: 0.78em;
+    font-size: 0.82em;
     color: #cbd5e1;
     font-weight: 700;
-    margin-bottom: 3px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    flex-shrink: 0;
+    min-width: 70px;
 }
 
 .contact-value {
-    font-size: 0.95em;
+    font-size: 0.92em;
     font-weight: 800;
     color: #f8fafc;
     word-break: break-all;
@@ -301,13 +310,13 @@ body::before {
 
 @media (max-width: 600px) {
     body { padding: 10px; }
-    .container { padding: 25px 18px; margin: 15px auto; }
-    .header h1 { font-size: 1.7em; }
-    .back-btn { position: relative; top: 0; right: 0; margin-bottom: 20px; display: inline-flex; }
-    .contact-grid { grid-template-columns: 1fr; }
-    .contact-card { padding: 14px 14px; }
-    .contact-icon { width: 42px; height: 42px; font-size: 20px; }
-    .message-section { padding: 20px 16px; font-size: 0.95em; }
+    .container { padding: 20px 14px; margin: 15px auto; }
+    .header h1 { font-size: 1.6em; }
+    .contact-card { padding: 8px 14px; gap: 10px; }
+    .contact-icon { width: 36px; height: 36px; font-size: 18px; }
+    .message-section { padding: 18px 14px; font-size: 0.92em; line-height: 1.9; }
+    .contact-label { font-size: 0.72em; }
+    .contact-value { font-size: 0.88em; }
 }
 </style>
 </head>
