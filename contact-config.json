@@ -1,12 +1,12 @@
 {
-  "message": "هر  گونه پیشنهاد یا انتقادی دارید  از طریق راه های ارتباطی زیر در ارتباط باشید : \n",
+  "message": "ÙØ±  Ú¯ÙÙÙ Ù¾ÛØ´ÙÙØ§Ø¯ ÛØ§ Ø§ÙØªÙØ§Ø¯Û Ø¯Ø§Ø±ÛØ¯  Ø§Ø² Ø·Ø±ÛÙ Ø±Ø§Ù ÙØ§Û Ø§Ø±ØªØ¨Ø§Ø·Û Ø²ÛØ± Ø¯Ø± Ø§Ø±ØªØ¨Ø§Ø· Ø¨Ø§Ø´ÛØ¯ : \n",
   "enabled": {
     "email": true,
     "telegram": true,
     "whatsapp": false,
     "bale": false,
     "rubika": false,
-    "eitaa": false,
+    "eitaa": true,
     "instagram": false,
     "github": false,
     "website": false,
@@ -23,7 +23,7 @@
   "linkedin": "your_username",
   "bale": "your_username",
   "rubika": "your_username",
-  "eitaa": "your_username",
+  "eitaa": "https://eitaa.com/s_naderi57",
   "phone": "+989120000000",
   "phoneDisplay": "+98 912 000 0000",
   "lastUpdated": "2026-08-29",
