@@ -271,6 +271,66 @@ body {
     .header h1 { font-size: 1.3em; }
     .contact-fields { grid-template-columns: 1fr; }
 }
+
+/* Message editor */
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.95em;
+    background: var(--input-bg);
+    color: var(--text);
+    outline: none;
+    transition: all 0.3s;
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.7;
+}
+.form-group textarea:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Enable checkboxes grid */
+.enable-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+.enable-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s;
+    user-select: none;
+}
+.enable-item:hover {
+    border-color: var(--secondary);
+    background: rgba(99, 102, 241, 0.05);
+}
+.enable-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--secondary);
+    flex-shrink: 0;
+}
+.enable-item .enable-label {
+    font-size: 0.88em;
+    font-weight: 700;
+    color: var(--text);
+}
+.enable-item .enable-icon {
+    font-size: 1.1em;
+}
 </style>
 </head>
 <body>
@@ -317,6 +377,33 @@ body {
 
         <!-- Contact Info Form -->
         <div id="contactForm" style="display: none;">
+
+            <!-- Message Editor -->
+            <div class="section-title">💬 متن معرفی صفحه ارتباط با ما</div>
+            <div class="form-group">
+                <textarea id="message" placeholder="متن معرفی خود را اینجا بنویسید...&#10;می‌توانید از خطوط جدید استفاده کنید."></textarea>
+                <div class="hint">این متن در بالای صفحه «ارتباط با ما» نمایش داده می‌شود</div>
+            </div>
+
+            <!-- Enable/Disable Networks -->
+            <div class="section-title">✅ شبکه‌های اجتماعی فعال</div>
+            <div class="hint" style="margin-bottom:10px;font-size:0.82em;color:var(--label);">
+                تیک شبکه‌هایی که می‌خواهید در صفحه «ارتباط با ما» نمایش داده شوند را بزنید
+            </div>
+            <div class="enable-grid" id="enableGrid">
+                <label class="enable-item"><input type="checkbox" id="en_email" checked><span class="enable-icon">✉️</span><span class="enable-label">ایمیل</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_telegram" checked><span class="enable-icon">✈️</span><span class="enable-label">تلگرام</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_whatsapp"><span class="enable-icon">💬</span><span class="enable-label">واتساپ</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_bale"><span class="enable-icon">🔵</span><span class="enable-label">بله</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_rubika"><span class="enable-icon">🟣</span><span class="enable-label">روبیکا</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_eitaa"><span class="enable-icon">🟢</span><span class="enable-label">ایتا</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_instagram"><span class="enable-icon">📷</span><span class="enable-label">اینستاگرام</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_github"><span class="enable-icon">🐙</span><span class="enable-label">گیت‌هاب</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_website"><span class="enable-icon">🌐</span><span class="enable-label">وب‌سایت</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_linkedin"><span class="enable-icon">💼</span><span class="enable-label">لینکدین</span></label>
+                <label class="enable-item"><input type="checkbox" id="en_phone"><span class="enable-icon">📞</span><span class="enable-label">تلفن</span></label>
+            </div>
+
             <div class="section-title">📧 اطلاعات تماس</div>
             <div class="contact-fields">
 
@@ -360,6 +447,21 @@ body {
                 <div class="form-group">
                     <label>💼 لینکدین (نام کاربری)</label>
                     <input type="text" id="linkedin" placeholder="username" style="direction: ltr;">
+                </div>
+
+                <div class="form-group">
+                    <label>🔵 بله (نام کاربری بدون @)</label>
+                    <input type="text" id="bale" placeholder="username" style="direction: ltr;">
+                </div>
+
+                <div class="form-group">
+                    <label>🟣 روبیکا (نام کاربری بدون @)</label>
+                    <input type="text" id="rubika" placeholder="username" style="direction: ltr;">
+                </div>
+
+                <div class="form-group">
+                    <label>🟢 ایتا (نام کاربری بدون @)</label>
+                    <input type="text" id="eitaa" placeholder="username" style="direction: ltr;">
                 </div>
 
                 <div class="form-group">
@@ -507,6 +609,19 @@ async function loadConfig() {
         localStorage.setItem('config-sha', sha);
 
         // Populate form
+        document.getElementById('message').value = content.message || '';
+        const en = content.enabled || {};
+        document.getElementById('en_email').checked = en.email !== false;
+        document.getElementById('en_telegram').checked = en.telegram !== false;
+        document.getElementById('en_whatsapp').checked = en.whatsapp === true;
+        document.getElementById('en_bale').checked = en.bale === true;
+        document.getElementById('en_rubika').checked = en.rubika === true;
+        document.getElementById('en_eitaa').checked = en.eitaa === true;
+        document.getElementById('en_instagram').checked = en.instagram === true;
+        document.getElementById('en_github').checked = en.github === true;
+        document.getElementById('en_website').checked = en.website === true;
+        document.getElementById('en_linkedin').checked = en.linkedin === true;
+        document.getElementById('en_phone').checked = en.phone === true;
         document.getElementById('email').value = content.email || '';
         document.getElementById('telegram').value = content.telegram || '';
         document.getElementById('whatsapp').value = content.whatsapp || '';
@@ -515,6 +630,9 @@ async function loadConfig() {
         document.getElementById('github').value = content.github || '';
         document.getElementById('website').value = content.website || '';
         document.getElementById('linkedin').value = content.linkedin || '';
+        document.getElementById('bale').value = content.bale || '';
+        document.getElementById('rubika').value = content.rubika || '';
+        document.getElementById('eitaa').value = content.eitaa || '';
         document.getElementById('phone').value = content.phone || '';
         document.getElementById('phoneDisplay').value = content.phoneDisplay || '';
 
@@ -537,6 +655,20 @@ async function saveChanges() {
 
     // Collect form data
     const config = {
+        message: document.getElementById('message').value,
+        enabled: {
+            email: document.getElementById('en_email').checked,
+            telegram: document.getElementById('en_telegram').checked,
+            whatsapp: document.getElementById('en_whatsapp').checked,
+            bale: document.getElementById('en_bale').checked,
+            rubika: document.getElementById('en_rubika').checked,
+            eitaa: document.getElementById('en_eitaa').checked,
+            instagram: document.getElementById('en_instagram').checked,
+            github: document.getElementById('en_github').checked,
+            website: document.getElementById('en_website').checked,
+            linkedin: document.getElementById('en_linkedin').checked,
+            phone: document.getElementById('en_phone').checked
+        },
         email: document.getElementById('email').value.trim(),
         telegram: document.getElementById('telegram').value.trim().replace('@', ''),
         whatsapp: document.getElementById('whatsapp').value.trim().replace(/[^0-9]/g, ''),
@@ -545,6 +677,9 @@ async function saveChanges() {
         github: document.getElementById('github').value.trim().replace('@', ''),
         website: document.getElementById('website').value.trim().replace(/^https?:\/\//, ''),
         linkedin: document.getElementById('linkedin').value.trim().replace('@', ''),
+        bale: document.getElementById('bale').value.trim().replace('@', ''),
+        rubika: document.getElementById('rubika').value.trim().replace('@', ''),
+        eitaa: document.getElementById('eitaa').value.trim().replace('@', ''),
         phone: document.getElementById('phone').value.trim(),
         phoneDisplay: document.getElementById('phoneDisplay').value.trim(),
         lastUpdated: new Date().toISOString().split('T')[0],
