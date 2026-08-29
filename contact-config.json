@@ -1,19 +1,19 @@
 {
-  "message": "ÃÂ¯ÃÂ± ÃÂµÃÂÃÂ±ÃÂª ÃÂÃÂ± ÃÂ¯ÃÂÃÂÃÂ ÃÂ¾ÃÂÃÂ´ÃÂÃÂÃÂ§ÃÂ¯ ÃÂÃÂ§ ÃÂ§ÃÂÃÂªÃÂÃÂ§ÃÂ¯ ÃÂ¨ÃÂ§ ÃÂÃÂ§ ÃÂ¯ÃÂ± ÃÂ§ÃÂ±ÃÂªÃÂ¨ÃÂ§ÃÂ· ÃÂ¨ÃÂ§ÃÂ´ÃÂÃÂ¯. ÃÂ¨ÃÂ§ ÃÂªÃÂ´ÃÂ©ÃÂ± .",
+  "message": "سلام و درود بر شما\n\nاین سایت با هدف ارائه ابزارهایی برای تریدرهای فارکس طراحی شده است. اگر سوال، پیشنهاد یا انتقادی دارید، خوشحال می‌شویم با ما در میان بگذارید. همچنین برای سفارش پروژه‌های مشابه می‌توانید از راه‌های ارتباطی زیر استفاده کنید.\n\nبا احترام،\nتیم ساعت جهانی فارکس",
   "enabled": {
     "email": true,
-    "telegram": false,
+    "telegram": true,
     "whatsapp": false,
     "bale": false,
     "rubika": false,
-    "eitaa": true,
+    "eitaa": false,
     "instagram": false,
     "github": false,
     "website": false,
     "linkedin": false,
     "phone": false
   },
-  "email": "saeed12345n@gmail.com",
+  "email": "info@example.com",
   "telegram": "your_username",
   "whatsapp": "989120000000",
   "whatsappDisplay": "+98 912 000 0000",
@@ -21,11 +21,11 @@
   "github": "your_username",
   "website": "your-portfolio.com",
   "linkedin": "your_username",
-  "bale": "your_username",
-  "rubika": "your_username",
-  "eitaa": "https://eitaa.com/s_naderi57",
   "phone": "+989120000000",
   "phoneDisplay": "+98 912 000 0000",
+  "bale": "your_username",
+  "rubika": "your_username",
+  "eitaa": "your_username",
   "lastUpdated": "2026-08-29",
-  "updatedBy": "admin"
+  "updatedBy": "system"
 }
