@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ارتباط با ما | ساعت جهانی فارکس</title>
+<meta name="description" content="راه‌های ارتباط با تیم ساعت جهانی فارکس - ایمیل، تلگرام، واتساپ، بله، روبیکا، ایتا و سایر شبکه‌های اجتماعی">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1e1b4b">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231e1b4b' stroke='%23818cf8' stroke-width='3'/%3E%3Cpath d='M30 50 Q50 30 70 50 Q50 70 30 50 Z' fill='%23818cf8'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%231e1b4b'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://s3.tradingview.com">
+
+<style>
+@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+
+:root {
+    --primary: #4c1d95;
+    --secondary: #6366f1;
+    --accent: #ff4757;
+    --text: #1e293b;
+    --bg: linear-gradient(135deg, #1e1b4b 0%, #312e81 35%, #4c1d95 70%, #5b21b6 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --label: #475569;
+    --input-bg: #f8fafc;
+    --border: rgba(255,255,255,0.15);
+    --shadow: rgba(0, 0, 0, 0.4);
+    --glow: rgba(129, 140, 248, 0.5);
+    --radius: 24px;
+    --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: #f8fafc;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(129, 140, 248, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 40px 35px;
+    box-shadow: 0 25px 60px var(--shadow);
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.6s var(--bounce);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.back-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    background: rgba(99, 102, 241, 0.2);
+    color: #c4b5fd;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    padding: 8px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: 700;
+    transition: all 0.3s var(--bounce);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.back-btn:hover {
+    background: var(--secondary);
+    color: white;
+    transform: translateX(-3px);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 2px dashed rgba(255,255,255,0.1);
+}
+
+.header h1 {
+    font-size: 2.4em;
+    font-weight: 900;
+    background: linear-gradient(135deg, #c4b5fd 0%, #818cf8 20%, #67e8f9 40%, #f472b6 60%, #c4b5fd 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.5));
+    animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+.header::after {
+    content: '';
+    display: block;
+    width: 180px;
+    height: 4px;
+    margin: 12px auto 0 auto;
+    border-radius: 4px;
+    background: linear-gradient(90deg, transparent, #818cf8, #67e8f9, #818cf8, transparent);
+    box-shadow: 0 0 16px rgba(129, 140, 248, 0.8);
+}
+
+.message-section {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 25px 22px;
+    margin-bottom: 35px;
+    line-height: 1.9;
+    font-size: 1em;
+    color: #e2e8f0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.message-section::before {
+    content: '💬';
+    position: absolute;
+    top: -15px;
+    right: 20px;
+    background: var(--bg);
+    padding: 0 10px;
+    font-size: 1.5em;
+}
+
+.section-title {
+    font-size: 1.3em;
+    font-weight: 800;
+    color: #c4b5fd;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(180deg, #818cf8, #6366f1);
+    border-radius: 4px;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+.contact-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    text-decoration: none;
+    color: #f8fafc;
+    transition: all 0.35s var(--bounce);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--c-color, var(--secondary));
+    opacity: 0.7;
+    transition: all 0.3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--c-color, var(--secondary));
+    box-shadow: 0 15px 30px var(--shadow), 0 0 25px var(--c-color, var(--secondary));
+}
+
+.contact-card:hover::before {
+    opacity: 1;
+    height: 5px;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--c-color, var(--secondary));
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.contact-label {
+    font-size: 0.78em;
+    color: #cbd5e1;
+    font-weight: 700;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.contact-value {
+    font-size: 0.95em;
+    font-weight: 800;
+    color: #f8fafc;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    line-height: 1.3;
+    direction: ltr;
+    text-align: right;
+}
+
+.contact-value.fa { direction: rtl; }
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #94a3b8;
+    font-size: 1em;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #94a3b8;
+}
+
+.empty-state .icon {
+    font-size: 4em;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.footer-credit {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 25px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    font-size: 0.8em;
+    color: #94a3b8;
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    body { padding: 10px; }
+    .container { padding: 25px 18px; margin: 15px auto; }
+    .header h1 { font-size: 1.7em; }
+    .back-btn { position: relative; top: 0; right: 0; margin-bottom: 20px; display: inline-flex; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-card { padding: 14px 14px; }
+    .contact-icon { width: 42px; height: 42px; font-size: 20px; }
+    .message-section { padding: 20px 16px; font-size: 0.95em; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">→ بازگشت به سایت</a>
+
+    <div class="header">
+        <h1>📞 ارتباط با ما</h1>
+    </div>
+
+    <div class="message-section" id="messageSection">
+        <div class="loading">در حال بارگذاری</div>
+    </div>
+
+    <h2 class="section-title">راه‌های ارتباطی</h2>
+
+    <div class="contact-grid" id="contactGrid">
+        <div class="loading">در حال بارگذاری</div>
+    </div>
+
+    <div class="footer-credit">
+        © ۲۰۲۶ ساعت جهانی فارکس — طراحی شده با ❤️ برای تریدرهای ایرانی
+    </div>
+</div>
+
+<script>
+(async function loadContactPage() {
+    const messageSection = document.getElementById('messageSection');
+    const grid = document.getElementById('contactGrid');
+
+    // Default config (used if fetch fails)
+    const defaults = {
+        message: 'سلام و درود بر شما\n\nاین سایت با هدف ارائه ابزارهایی برای تریدرهای فارکس طراحی شده است.',
+        enabled: { email: true, telegram: true },
+        email: 'info@example.com',
+        telegram: 'your_username',
+        whatsapp: '989120000000',
+        whatsappDisplay: '+98 912 000 0000',
+        instagram: 'your_username',
+        github: 'your_username',
+        website: 'your-portfolio.com',
+        linkedin: 'your_username',
+        phone: '+989120000000',
+        phoneDisplay: '+98 912 000 0000',
+        bale: 'your_username',
+        rubika: 'your_username',
+        eitaa: 'your_username'
+    };
+
+    let config = defaults;
+    try {
+        const response = await fetch('contact-config.json?v=' + Date.now());
+        if (response.ok) {
+            config = Object.assign(defaults, await response.json());
+        }
+    } catch(e) {
+        console.log('Using default config');
+    }
+
+    // Display message
+    messageSection.textContent = config.message || defaults.message;
+
+    // All possible contact cards (only enabled ones will be shown)
+    const allCards = [
+        {
+            key: 'email',
+            label: 'ایمیل',
+            icon: '✉️',
+            color: '#ea4335',
+            href: 'mailto:' + config.email,
+            value: config.email
+        },
+        {
+            key: 'telegram',
+            label: 'تلگرام',
+            icon: '✈️',
+            color: '#0088cc',
+            href: 'https://t.me/' + config.telegram,
+            value: '@' + config.telegram
+        },
+        {
+            key: 'whatsapp',
+            label: 'واتساپ',
+            icon: '💬',
+            color: '#25d366',
+            href: 'https://wa.me/' + config.whatsapp,
+            value: config.whatsappDisplay
+        },
+        {
+            key: 'bale',
+            label: 'بله',
+            icon: '🔵',
+            color: '#3b82f6',
+            href: 'https://ble.ir/' + config.bale,
+            value: '@' + config.bale
+        },
+        {
+            key: 'rubika',
+            label: 'روبیکا',
+            icon: '🟣',
+            color: '#a855f7',
+            href: 'https://rubika.ir/' + config.rubika,
+            value: '@' + config.rubika
+        },
+        {
+            key: 'eitaa',
+            label: 'ایتا',
+            icon: '🟢',
+            color: '#22c55e',
+            href: 'https://eitaa.com/' + config.eitaa,
+            value: '@' + config.eitaa
+        },
+        {
+            key: 'instagram',
+            label: 'اینستاگرام',
+            icon: '📷',
+            color: '#e1306c',
+            href: 'https://instagram.com/' + config.instagram,
+            value: '@' + config.instagram
+        },
+        {
+            key: 'github',
+            label: 'گیت‌هاب',
+            icon: '🐙',
+            color: '#6e5494',
+            href: 'https://github.com/' + config.github,
+            value: 'github.com/' + config.github
+        },
+        {
+            key: 'website',
+            label: 'وب‌سایت',
+            icon: '🌐',
+            color: '#4c1d95',
+            href: 'https://' + config.website,
+            value: config.website
+        },
+        {
+            key: 'linkedin',
+            label: 'لینکدین',
+            icon: '💼',
+            color: '#0077b5',
+            href: 'https://linkedin.com/in/' + config.linkedin,
+            value: 'linkedin.com/in/' + config.linkedin
+        },
+        {
+            key: 'phone',
+            label: 'تلفن',
+            icon: '📞',
+            color: '#10b981',
+            href: 'tel:' + config.phone,
+            value: config.phoneDisplay
+        }
+    ];
+
+    // Filter: only show enabled cards with non-empty, non-default values
+    const enabled = config.enabled || {};
+    const visibleCards = allCards.filter(card => {
+        if (!enabled[card.key]) return false;
+        if (!card.value || card.value.includes('your_') || card.value === 'your-portfolio.com') return false;
+        return true;
+    });
+
+    // Clear loading
+    grid.innerHTML = '';
+
+    if (visibleCards.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+                <div class="icon">📭</div>
+                <div>هنوز راه ارتباطی فعال شده‌ای وجود ندارد.</div>
+                <div style="font-size:0.85em;opacity:0.7;margin-top:8px;">مدیر سایت می‌تواند از پنل مدیریت راه‌های ارتباطی را فعال کند.</div>
+            </div>
+        `;
+        return;
+    }
+
+    // Build cards
+    visibleCards.forEach(card => {
+        const a = document.createElement('a');
+        a.href = card.href;
+        a.className = 'contact-card';
+        a.style.setProperty('--c-color', card.color);
+        if (!card.href.startsWith('mailto:') && !card.href.startsWith('tel:')) {
+            a.target = '_blank';
+            a.rel = 'noopener';
+        }
+        a.innerHTML = `
+            <div class="contact-icon">${card.icon}</div>
+            <div class="contact-info">
+                <div class="contact-label">${card.label}</div>
+                <div class="contact-value">${card.value}</div>
+            </div>
+        `;
+        grid.appendChild(a);
+    });
+})();
+</script>
+
+</body>
+</html>
