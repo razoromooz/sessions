@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>اخبار اقتصادی | ساعت جهانی فارکس</title>
-<meta name="description" content="مهم‌ترین اخبار اقتصادی و رویدادهای بازار فارکس به‌صورت زنده - تقویم اقتصادی، اخبار طلا، نفت، ارزها و شاخص‌ها">
+<title>تقویم اقتصادی فارکس | ساعت جهانی فارکس</title>
+<meta name="description" content="تقویم اقتصادی فارکس به فارسی با زمان ایران - فیلتر بر اساس امروز، هفته، و تاریخ سفارشی و ارزهای اصلی">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#1e1b4b">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231e1b4b' stroke='%23818cf8' stroke-width='3'/%3E%3Cpath d='M30 35h40v5H30zm0 12h40v5H30zm0 12h25v5H30z' fill='%23818cf8'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231e1b4b' stroke='%23818cf8' stroke-width='3'/%3E%3Crect x='28' y='30' width='44' height='40' rx='4' fill='none' stroke='%23818cf8' stroke-width='3'/%3E%3Cline x1='28' y1='42' x2='72' y2='42' stroke='%23818cf8' stroke-width='3'/%3E%3Ccircle cx='42' cy='52' r='2.5' fill='%2334d399'/%3E%3Ccircle cx='58' cy='52' r='2.5' fill='%23f59e0b'/%3E%3C/svg%3E">
 
 <style>
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
@@ -130,7 +130,6 @@ body::before {
     box-shadow: 0 0 16px rgba(129, 140, 248, 0.8);
 }
 
-/* Live indicator */
 .live-indicator {
     display: inline-flex;
     align-items: center;
@@ -143,13 +142,6 @@ body::before {
     font-weight: 800;
     color: #34d399;
     margin-top: 8px;
-}
-
-.updated-time {
-    margin-top: 6px;
-    font-size: 0.72em;
-    color: var(--text-muted);
-    opacity: 0.8;
 }
 
 .live-dot {
@@ -166,53 +158,216 @@ body::before {
     50% { opacity: 0.5; transform: scale(1.3); }
 }
 
-/* Filter tabs */
-.tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+.updated-time {
+    margin-top: 6px;
+    font-size: 0.72em;
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
-.tab {
-    padding: 8px 18px;
+/* === Filter Section === */
+.filter-section {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.filter-row:last-child { margin-bottom: 0; }
+
+.filter-label {
+    font-size: 0.82em;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 70px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Date filter pills */
+.date-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.date-pill {
+    padding: 7px 14px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
+    border-radius: 10px;
     color: var(--text-muted);
-    font-size: 0.85em;
+    font-size: 0.82em;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s var(--bounce);
+    transition: all 0.25s var(--bounce);
+    white-space: nowrap;
 }
 
-.tab:hover { background: rgba(255,255,255,0.1); color: var(--text); }
-.tab.active {
+.date-pill:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+.date-pill.active {
     background: linear-gradient(135deg, var(--secondary), var(--primary));
     color: white;
     border-color: transparent;
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-/* News cards */
+/* Custom date picker */
+.custom-date {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.custom-date.visible { display: flex; }
+
+.custom-date input[type="date"] {
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.85em;
+    cursor: pointer;
+    outline: none;
+    color-scheme: dark;
+}
+
+.custom-date input[type="date"]:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.custom-date .date-sep {
+    color: var(--text-muted);
+    font-size: 0.85em;
+}
+
+/* Currency filter chips */
+.currency-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.currency-chip {
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-size: 0.78em;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s var(--bounce);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    direction: ltr;
+}
+
+.currency-chip:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+.currency-chip.active {
+    background: linear-gradient(135deg, var(--currency-color, var(--secondary)), color-mix(in srgb, var(--currency-color, var(--secondary)) 70%, black));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 10px var(--currency-color, rgba(99, 102, 241, 0.4));
+}
+
+.currency-chip .flag { font-size: 1.1em; }
+
+/* Impact filter */
+.impact-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.impact-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.78em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s var(--bounce);
+    border: 1px solid;
+}
+
+.impact-chip.high { border-color: rgba(239, 68, 68, 0.3); color: #fca5a5; background: rgba(239, 68, 68, 0.05); }
+.impact-chip.medium { border-color: rgba(245, 158, 11, 0.3); color: #fcd34d; background: rgba(245, 158, 11, 0.05); }
+.impact-chip.low { border-color: rgba(16, 185, 129, 0.3); color: #6ee7b7; background: rgba(16, 185, 129, 0.05); }
+.impact-chip.holiday { border-color: rgba(148, 163, 184, 0.3); color: #cbd5e1; background: rgba(148, 163, 184, 0.05); }
+
+.impact-chip.active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.impact-chip.high.active { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; color: #fee2e2; }
+.impact-chip.medium.active { background: rgba(245, 158, 11, 0.25); border-color: #f59e0b; color: #fef3c7; }
+.impact-chip.low.active { background: rgba(16, 185, 129, 0.25); border-color: #10b981; color: #d1fae5; }
+.impact-chip.holiday.active { background: rgba(148, 163, 184, 0.25); border-color: #94a3b8; color: #f1f5f9; }
+
+/* Search box */
+.search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.85em;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.search-box::placeholder { color: var(--text-muted); }
+.search-box:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* === News list === */
 .news-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .news-card {
     background: var(--card-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
+    border-radius: 12px;
+    padding: 10px 14px;
     transition: all 0.3s var(--bounce);
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .news-card::before {
@@ -227,32 +382,31 @@ body::before {
 .news-card:hover {
     transform: translateX(-4px);
     border-color: var(--impact-color, var(--secondary));
-    box-shadow: 0 10px 25px var(--shadow);
+    box-shadow: 0 8px 20px var(--shadow);
 }
 
 .news-card.high { --impact-color: var(--danger); }
 .news-card.medium { --impact-color: var(--warning); }
 .news-card.low { --impact-color: var(--success); }
+.news-card.holiday { --impact-color: #94a3b8; }
 
-.news-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 8px;
-}
+.news-card.past { opacity: 0.55; }
+.news-card.past:hover { opacity: 1; }
 
+/* Time block */
 .news-time {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 1px;
     flex-shrink: 0;
-    min-width: 65px;
+    min-width: 70px;
+    padding-left: 8px;
+    border-left: 1px dashed rgba(255,255,255,0.1);
 }
 
 .news-time .time {
-    font-size: 1.1em;
+    font-size: 1.05em;
     font-weight: 900;
     color: var(--text);
     direction: ltr;
@@ -260,7 +414,7 @@ body::before {
 }
 
 .news-time .date {
-    font-size: 0.72em;
+    font-size: 0.7em;
     color: var(--text-muted);
     direction: ltr;
 }
@@ -269,83 +423,105 @@ body::before {
     font-size: 0.66em;
     color: #c4b5fd;
     font-weight: 700;
-    margin-top: 2px;
+    margin-top: 1px;
     direction: rtl;
 }
 
+/* Content */
 .news-content {
     flex: 1;
     min-width: 0;
 }
 
-.news-past-badge {
-    background: rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.88em;
-}
-
-/* Past events — dimmed */
-.news-card.past { opacity: 0.6; }
-.news-card.past:hover { opacity: 1; }
-
 .news-title {
-    font-size: 0.98em;
+    font-size: 0.92em;
     font-weight: 800;
     color: var(--text);
-    margin-bottom: 6px;
-    line-height: 1.5;
+    margin-bottom: 4px;
+    line-height: 1.4;
 }
 
 .news-meta {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    font-size: 0.78em;
+    font-size: 0.76em;
 }
 
 .news-currency {
-    background: rgba(99, 102, 241, 0.15);
-    color: #c4b5fd;
+    background: var(--currency-bg, rgba(99, 102, 241, 0.15));
+    color: var(--currency-text, #c4b5fd);
     padding: 2px 8px;
     border-radius: 6px;
     font-weight: 800;
     direction: ltr;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .news-impact {
     padding: 2px 8px;
     border-radius: 6px;
     font-weight: 700;
-    font-size: 0.88em;
+    font-size: 0.9em;
 }
 
 .news-impact.high { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
 .news-impact.medium { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
 .news-impact.low { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+.news-impact.holiday { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
 
-.news-actual {
-    background: rgba(129, 140, 248, 0.15);
-    color: #c4b5fd;
+.news-value {
     padding: 2px 8px;
     border-radius: 6px;
     font-weight: 700;
     direction: ltr;
 }
 
-.news-forecast {
+.news-value.actual.better { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+.news-value.actual.worse { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.news-value.actual.neutral { background: rgba(129, 140, 248, 0.15); color: #c4b5fd; }
+.news-value.forecast, .news-value.previous {
     color: var(--text-muted);
-    font-weight: 600;
-    direction: ltr;
+    background: rgba(255,255,255,0.05);
 }
 
-.news-actual.better { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
-.news-actual.worse { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.news-value-label {
+    font-size: 0.78em;
+    opacity: 0.7;
+}
 
-/* Loading and empty states */
+.news-past-badge {
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+/* Day separator */
+.day-separator {
+    text-align: center;
+    padding: 12px 0 6px 0;
+    margin-top: 8px;
+    font-size: 0.85em;
+    font-weight: 800;
+    color: #c4b5fd;
+}
+
+.day-separator:first-child { margin-top: 0; }
+
+.day-separator::before,
+.day-separator::after {
+    content: '─';
+    color: rgba(129, 140, 248, 0.3);
+    margin: 0 10px;
+}
+
+/* States */
 .loading, .empty-state {
     text-align: center;
     padding: 40px 20px;
@@ -369,55 +545,56 @@ body::before {
     opacity: 0.5;
 }
 
-/* External sources */
-.sources-section {
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 2px dashed rgba(255,255,255,0.1);
-}
-
-.sources-title {
-    font-size: 1.1em;
-    font-weight: 800;
-    color: #c4b5fd;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.sources-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 10px;
-}
-
-.source-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    text-decoration: none;
-    color: var(--text);
+.retry-btn {
+    margin-top: 16px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 0.85em;
+    font-weight: 700;
+    cursor: pointer;
     transition: all 0.3s var(--bounce);
 }
 
-.source-card:hover {
-    background: rgba(99, 102, 241, 0.15);
-    border-color: var(--secondary);
-    transform: translateX(-3px);
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
 
-.source-icon {
-    font-size: 1.4em;
+/* Stats bar */
+.stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 0.82em;
+    color: var(--text-muted);
 }
 
-.source-info { flex: 1; min-width: 0; }
-.source-name { font-size: 0.88em; font-weight: 700; }
-.source-desc { font-size: 0.72em; color: var(--text-muted); }
+.stats-bar .stat {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stats-bar .stat-value {
+    font-weight: 800;
+    color: var(--text);
+}
+
+.stats-bar .stat-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255,255,255,0.1);
+}
 
 /* Footer */
 .footer-credit {
@@ -435,36 +612,17 @@ body::before {
     body { padding: 10px; }
     .container { margin: 15px auto; }
     .header h1 { font-size: 1.6em; }
-    .news-card { padding: 12px 14px; }
-    .news-header { flex-direction: column; gap: 6px; }
-    .news-time { flex-direction: row; gap: 8px; }
-    .news-title { font-size: 0.92em; }
-    .tab { padding: 6px 14px; font-size: 0.8em; }
-    .sources-grid { grid-template-columns: 1fr; }
-}
-
-/* TradingView widget section */
-.tv-widget-section {
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 2px dashed rgba(255,255,255,0.1);
-}
-
-.tv-widget-container {
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 12px;
-    overflow: hidden;
-}
-
-.tv-widget-container .tradingview-widget-container {
-    min-height: 500px;
-}
-
-.tv-widget-container iframe {
-    border-radius: 12px;
-    width: 100% !important;
+    .filter-section { padding: 14px 12px; }
+    .filter-row { gap: 8px; }
+    .filter-label { min-width: auto; width: 100%; }
+    .date-pill { padding: 6px 11px; font-size: 0.78em; }
+    .news-card { padding: 8px 10px; gap: 8px; }
+    .news-time { min-width: 55px; padding-left: 4px; }
+    .news-time .time { font-size: 0.95em; }
+    .news-title { font-size: 0.86em; }
+    .news-meta { gap: 6px; font-size: 0.72em; }
+    .stats-bar { font-size: 0.78em; padding: 8px 10px; }
+    .stats-bar .stat-divider { display: none; }
 }
 </style>
 </head>
@@ -474,259 +632,387 @@ body::before {
     <a href="index.html" class="back-btn">→ بازگشت به سایت</a>
 
     <div class="header">
-        <h1>📊 اخبار اقتصادی</h1>
-        <p>مهم‌ترین رویدادهای بازار فارکس — به‌روزرسانی زنده</p>
+        <h1>📅 تقویم اقتصادی فارکس</h1>
+        <p>اخبار اقتصادی بازار فارکس به فارسی — با زمان ایران</p>
         <div class="live-indicator">
             <span class="live-dot"></span>
             زنده
         </div>
-        <div class="updated-time" id="updatedTime"></div>
+        <div class="updated-time" id="updatedTime">⏳ در حال دریافت اخبار...</div>
     </div>
 
-    <div class="tabs" id="tabs">
-        <div class="tab active" data-filter="upcoming">⏳ پیش رو</div>
-        <div class="tab" data-filter="today">📅 امروز</div>
-        <div class="tab" data-filter="high">🔴 مهم</div>
-        <div class="tab" data-filter="medium">🟡 متوسط</div>
-        <div class="tab" data-filter="low">🟢 کم</div>
-        <div class="tab" data-filter="all">📋 همه</div>
+    <!-- Filters -->
+    <div class="filter-section">
+
+        <!-- Date filter row -->
+        <div class="filter-row">
+            <div class="filter-label">📅 تاریخ:</div>
+            <div class="date-pills" id="datePills">
+                <div class="date-pill active" data-date="today">امروز</div>
+                <div class="date-pill" data-date="tomorrow">فردا</div>
+                <div class="date-pill" data-date="thisweek">این هفته</div>
+                <div class="date-pill" data-date="nextweek">هفته بعد</div>
+                <div class="date-pill" data-date="custom">سفارشی</div>
+            </div>
+            <div class="custom-date" id="customDate">
+                <input type="date" id="customDateStart">
+                <span class="date-sep">تا</span>
+                <input type="date" id="customDateEnd">
+            </div>
+        </div>
+
+        <!-- Currency filter row -->
+        <div class="filter-row">
+            <div class="filter-label">💱 ارز:</div>
+            <div class="currency-chips" id="currencyChips">
+                <div class="currency-chip active" data-currency="all">🌐 همه</div>
+                <div class="currency-chip" data-currency="USD" style="--currency-color: #22c55e;">🇺🇸 USD</div>
+                <div class="currency-chip" data-currency="EUR" style="--currency-color: #3b82f6;">🇪🇺 EUR</div>
+                <div class="currency-chip" data-currency="GBP" style="--currency-color: #6366f1;">🇬🇧 GBP</div>
+                <div class="currency-chip" data-currency="JPY" style="--currency-color: #f43f5e;">🇯🇵 JPY</div>
+                <div class="currency-chip" data-currency="AUD" style="--currency-color: #14b8a6;">🇦🇺 AUD</div>
+                <div class="currency-chip" data-currency="CAD" style="--currency-color: #f97316;">🇨🇦 CAD</div>
+                <div class="currency-chip" data-currency="CHF" style="--currency-color: #ef4444;">🇨🇭 CHF</div>
+                <div class="currency-chip" data-currency="NZD" style="--currency-color: #8b5cf6;">🇳🇿 NZD</div>
+                <div class="currency-chip" data-currency="CNY" style="--currency-color: #eab308;">🇨🇳 CNY</div>
+            </div>
+        </div>
+
+        <!-- Impact filter row -->
+        <div class="filter-row">
+            <div class="filter-label">⚡ اهمیت:</div>
+            <div class="impact-chips" id="impactChips">
+                <div class="impact-chip high active" data-impact="High">🔴 مهم</div>
+                <div class="impact-chip medium active" data-impact="Medium">🟡 متوسط</div>
+                <div class="impact-chip low active" data-impact="Low">🟢 کم</div>
+                <div class="impact-chip holiday active" data-impact="Holiday">⚪️ تعطیلی</div>
+            </div>
+        </div>
+
+        <!-- Search row -->
+        <div class="filter-row">
+            <div class="filter-label">🔍 جستجو:</div>
+            <input type="text" class="search-box" id="searchBox" placeholder="جستجوی عنوان خبر... (مثلاً NFP, CPI, Interest Rate)">
+        </div>
+
     </div>
 
+    <!-- Stats bar -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat">
+            <span>📊</span>
+            <span class="stat-value" id="statTotal">0</span>
+            <span>رویداد</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span>🔴</span>
+            <span class="stat-value" id="statHigh">0</span>
+            <span>مهم</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span>🟡</span>
+            <span class="stat-value" id="statMedium">0</span>
+            <span>متوسط</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+            <span>🟢</span>
+            <span class="stat-value" id="statLow">0</span>
+            <span>کم</span>
+        </div>
+    </div>
+
+    <!-- News list -->
     <div class="news-grid" id="newsGrid">
         <div class="loading">در حال بارگذاری اخبار</div>
     </div>
 
-    <!-- Fallback: TradingView economic calendar widget (always loads) -->
-    <div class="tv-widget-section">
-        <h2 class="sources-title">📈 تقویم اقتصادی زنده</h2>
-        <div class="tv-widget-container">
-            <!-- TradingView Economic Calendar Widget -->
-            <div class="tradingview-widget-container">
-                <div class="tradingview-widget-container__widget"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
-                {
-                "colorTheme": "dark",
-                "isTransparent": true,
-                "locale": "fa_IR",
-                "width": "100%",
-                "height": "500"
-                }
-                </script>
-            </div>
-        </div>
-    </div>
-
-    <div class="sources-section">
-        <h2 class="sources-title">📰 منابع اخبار</h2>
-        <div class="sources-grid">
-            <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">📅</span>
-                <div class="source-info">
-                    <div class="source-name">Forex Factory</div>
-                    <div class="source-desc">تقویم اقتصادی کامل</div>
-                </div>
-            </a>
-            <a href="https://www.investing.com/economic-calendar/" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">📈</span>
-                <div class="source-info">
-                    <div class="source-name">Investing.com</div>
-                    <div class="source-desc">تقویم اقتصادی و تحلیل</div>
-                </div>
-            </a>
-            <a href="https://www.reuters.com/markets/" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">🌍</span>
-                <div class="source-info">
-                    <div class="source-name">Reuters Markets</div>
-                    <div class="source-desc">اخبار بازارهای جهانی</div>
-                </div>
-            </a>
-            <a href="https://www.cnbc.com/world-markets/" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">💹</span>
-                <div class="source-info">
-                    <div class="source-name">CNBC Markets</div>
-                    <div class="source-desc">بازارهای مالی آمریکا</div>
-                </div>
-            </a>
-            <a href="https://www.forexfactory.com/news" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">📰</span>
-                <div class="source-info">
-                    <div class="source-name">Forex Factory News</div>
-                    <div class="source-desc">اخبار لحظه‌ای فارکس</div>
-                </div>
-            </a>
-            <a href="https://www.dailyfx.com/" target="_blank" rel="noopener" class="source-card">
-                <span class="source-icon">⚡</span>
-                <div class="source-info">
-                    <div class="source-name">DailyFX</div>
-                    <div class="source-desc">تحلیل روزانه فارکس</div>
-                </div>
-            </a>
-        </div>
-    </div>
-
     <div class="footer-credit">
-        © ۲۰۲۶ ساعت جهانی فارکس — اخبار از منابع معتبر جهانی
+        © ۲۰۲۶ ساعت جهانی فارکس — داده‌ها از ForexFactory · زمان‌ها به وقت ایران
     </div>
 </div>
 
 <script>
-// === Economic News Page ===
-// Fetches economic calendar events from ForexFactory's public API (JSON feed)
-// and displays them in a compact, user-friendly format.
-
+// === Forex Economic Calendar - Persian UI with Iran timezone ===
 (function() {
-    const grid = document.getElementById('newsGrid');
-    const tabs = document.querySelectorAll('.tab');
-    let allEvents = [];
-    let currentFilter = 'upcoming';
+    'use strict';
 
-    // ForexFactory calendar JSON (free public endpoint)
-    // This returns the events for the current week
-    const FF_URL = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+    const grid = document.getElementById('newsGrid');
+    const updatedTimeEl = document.getElementById('updatedTime');
+    const statsBar = document.getElementById('statsBar');
+
+    // State
+    let thisWeekEvents = [];
+    let nextWeekEvents = [];
+    let allEvents = [];
+    let filters = {
+        date: 'today',
+        customStart: null,
+        customEnd: null,
+        currency: 'all',
+        impacts: { High: true, Medium: true, Low: true, Holiday: true },
+        search: ''
+    };
+
+    // Currency metadata: colors and flags
+    const currencyMeta = {
+        'USD': { flag: '🇺🇸', bg: 'rgba(34, 197, 94, 0.15)', text: '#86efac', name: 'دلار آمریکا' },
+        'EUR': { flag: '🇪🇺', bg: 'rgba(59, 130, 246, 0.15)', text: '#93c5fd', name: 'یورو' },
+        'GBP': { flag: '🇬🇧', bg: 'rgba(99, 102, 241, 0.15)', text: '#c4b5fd', name: 'پوند استرلینگ' },
+        'JPY': { flag: '🇯🇵', bg: 'rgba(244, 63, 94, 0.15)', text: '#fda4af', name: 'ین ژاپن' },
+        'AUD': { flag: '🇦🇺', bg: 'rgba(20, 184, 166, 0.15)', text: '#5eead4', name: 'دلار استرالیا' },
+        'CAD': { flag: '🇨🇦', bg: 'rgba(249, 115, 22, 0.15)', text: '#fdba74', name: 'دلار کانادا' },
+        'CHF': { flag: '🇨🇭', bg: 'rgba(239, 68, 68, 0.15)', text: '#fca5a5', name: 'فرانک سوئیس' },
+        'NZD': { flag: '🇳🇿', bg: 'rgba(139, 92, 246, 0.15)', text: '#c4b5fd', name: 'دلار نیوزلند' },
+        'CNY': { flag: '🇨🇳', bg: 'rgba(234, 179, 8, 0.15)', text: '#fde047', name: 'یوان چین' },
+        'ALL': { flag: '🌍', bg: 'rgba(99, 102, 241, 0.15)', text: '#c4b5fd', name: 'همه ارزها' }
+    };
+
+    // Persian day names
+    const persianDays = ['یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+    // === Load events from ForexFactory API ===
+    async function fetchJSON(url) {
+        const response = await fetch(url + '?_t=' + Date.now(), {
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+    }
 
     async function loadEvents() {
-        const updatedTimeEl = document.getElementById('updatedTime');
         updatedTimeEl.textContent = '⏳ در حال دریافت اخبار زنده...';
-
         try {
-            // Fetch with cache-busting to always get fresh data
-            const url = FF_URL + '?_t=' + Date.now();
-            const response = await fetch(url, {
-                headers: { 'Accept': 'application/json' }
-            });
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            const data = await response.json();
+            // Fetch this week's data
+            thisWeekEvents = await fetchJSON('https://nfs.faireconomy.media/ff_calendar_thisweek.json');
+            if (!Array.isArray(thisWeekEvents)) throw new Error('Invalid data format');
 
-            // Validate that we got real data (not empty)
-            if (!Array.isArray(data) || data.length === 0) {
-                throw new Error('Empty response');
+            // Try to fetch next week's data (may not always be available)
+            try {
+                nextWeekEvents = await fetchJSON('https://nfs.faireconomy.media/ff_calendar_nextweek.json');
+                if (!Array.isArray(nextWeekEvents)) nextWeekEvents = [];
+            } catch(e) {
+                nextWeekEvents = [];
             }
 
-            allEvents = data;
+            // Combine all events
+            allEvents = [...thisWeekEvents, ...nextWeekEvents];
+
             updateLastUpdated();
             renderEvents();
         } catch (error) {
             console.error('Error loading news:', error);
-
-            // Don't show fake sample data — show a clear error message
-            allEvents = [];
-            updatedTimeEl.innerHTML = '⚠️ دریافت اخبار زنده ناموفق بود. <a href="#" onclick="loadEvents(); return false;" style="color: #c4b5fd; text-decoration: underline;">تلاش مجدد</a> یا <a href="https://www.forexfactory.com/calendar" target="_blank" style="color: #c4b5fd; text-decoration: underline;">مشاهده تقویم کامل</a>';
-
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <div class="icon">📡</div>
-                    <div style="margin-bottom: 12px; font-size: 1em;">دریافت اخبار از منبع ناموفق بود</div>
-                    <div style="font-size: 0.85em; opacity: 0.7; margin-bottom: 16px;">
-                        ممکن است به دلیل محدودیت شبکه یا فایروال باشد.<br>
-                        لطفاً بعداً تلاش کنید یا از منابع زیر استفاده کنید:
-                    </div>
-                    <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="source-card" style="display: inline-flex; max-width: 300px; margin: 0 auto;">
-                        <span class="source-icon">📅</span>
-                        <div class="source-info">
-                            <div class="source-name">Forex Factory Calendar</div>
-                            <div class="source-desc">مشاهده تقویم اقتصادی کامل</div>
-                        </div>
-                    </a>
-                </div>
-            `;
+            showError(error.message);
         }
+    }
+
+    function showError(msg) {
+        updatedTimeEl.innerHTML = '⚠️ خطا در دریافت اخبار';
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="icon">📡</div>
+                <div style="margin-bottom: 6px; font-size: 1em;">دریافت اخبار ناموفق بود</div>
+                <div style="font-size: 0.85em; opacity: 0.7; margin-bottom: 12px;">${msg}</div>
+                <button class="retry-btn" onclick="loadEvents()">🔄 تلاش مجدد</button>
+            </div>
+        `;
+        statsBar.style.display = 'none';
     }
 
     function updateLastUpdated() {
         const now = new Date();
         const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tehran' });
-        const dateStr = now.toLocaleDateString('fa-IR', { timeZone: 'Asia/Tehran' });
-        document.getElementById('updatedTime').textContent = `آخرین به‌روزرسانی: ${dateStr} - ${timeStr}`;
+        const dateStr = now.toLocaleDateString('fa-IR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Asia/Tehran' });
+        updatedTimeEl.textContent = `آخرین به‌روزرسانی: ${dateStr} - ${timeStr}`;
     }
 
-    function renderEvents() {
-        if (!allEvents || allEvents.length === 0) {
-            grid.innerHTML = `
-                <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <div>هیچ خبری یافت نشد. بعداً دوباره تلاش کنید.</div>
-                </div>
-            `;
-            return;
-        }
+    // === Date helpers (Tehran timezone) ===
+    function getTehranDate(date) {
+        // Convert any date to Tehran timezone components
+        const str = date.toLocaleString('en-US', { timeZone: 'Asia/Tehran', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        const [, month, day, year, hour, minute, second] = str.match(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+)/) || [];
+        return { year: +year, month: +month, day: +day, hour: +hour, minute: +minute, second: +second };
+    }
 
-        // Filter events
+    function getTehranDateString(date) {
+        // Returns YYYY-MM-DD in Tehran timezone
+        const t = getTehranDate(date);
+        return `${t.year}-${String(t.month).padStart(2,'0')}-${String(t.day).padStart(2,'0')}`;
+    }
+
+    function isSameTehranDay(date1, date2) {
+        return getTehranDateString(date1) === getTehranDateString(date2);
+    }
+
+    function isTodayInTehran(date) {
+        return isSameTehranDay(date, new Date());
+    }
+
+    function isTomorrowInTehran(date) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return isSameTehranDay(date, tomorrow);
+    }
+
+    function isThisWeekInTehran(date) {
+        // Get start of this week (Saturday in Iran)
+        const now = new Date();
+        const tNow = getTehranDate(now);
+        const nowDate = new Date(now);
+        // In Iran, week starts on Saturday (day 6)
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'Asia/Tehran' });
+        const dayMap = { 'Sat': 0, 'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6 };
+        const dow = dayMap[dayOfWeek] !== undefined ? dayMap[dayMap] : 0;
+        // Calculate start of week (Saturday)
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - dow);
+        weekStart.setHours(0, 0, 0, 0);
+        // End of week (Friday)
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        weekEnd.setHours(23, 59, 59, 999);
+        return date >= weekStart && date <= weekEnd;
+    }
+
+    function isNextWeekInTehran(date) {
+        const now = new Date();
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'Asia/Tehran' });
+        const dayMap = { 'Sat': 0, 'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6 };
+        const dow = dayMap[dayOfWeek] !== undefined ? dayMap[dayOfWeek] : 0;
+        const thisWeekStart = new Date(now);
+        thisWeekStart.setDate(now.getDate() - dow);
+        thisWeekStart.setHours(0, 0, 0, 0);
+        const nextWeekStart = new Date(thisWeekStart);
+        nextWeekStart.setDate(thisWeekStart.getDate() + 7);
+        const nextWeekEnd = new Date(nextWeekStart);
+        nextWeekEnd.setDate(nextWeekStart.getDate() + 6);
+        nextWeekEnd.setHours(23, 59, 59, 999);
+        return date >= nextWeekStart && date <= nextWeekEnd;
+    }
+
+    // === Filtering ===
+    function filterEvents() {
+        const now = new Date();
         let filtered = allEvents.filter(event => {
             const eventDate = new Date(event.date);
-            if (currentFilter === 'all') return true;
-            if (currentFilter === 'upcoming') return eventDate >= new Date();
-            if (currentFilter === 'high') return event.impact === 'High';
-            if (currentFilter === 'medium') return event.impact === 'Medium';
-            if (currentFilter === 'low') return event.impact === 'Low';
-            if (currentFilter === 'today') {
-                // Today in Tehran timezone
-                const today = new Date().toLocaleDateString('en-GB', { timeZone: 'Asia/Tehran' });
-                const eventDateTehran = new Date(event.date).toLocaleDateString('en-GB', { timeZone: 'Asia/Tehran' });
-                return today === eventDateTehran;
+
+            // Date filter
+            if (filters.date === 'today' && !isTodayInTehran(eventDate)) return false;
+            if (filters.date === 'tomorrow' && !isTomorrowInTehran(eventDate)) return false;
+            if (filters.date === 'thisweek' && !isThisWeekInTehran(eventDate)) return false;
+            if (filters.date === 'nextweek' && !isNextWeekInTehran(eventDate)) return false;
+            if (filters.date === 'custom') {
+                if (filters.customStart && getTehranDateString(eventDate) < filters.customStart) return false;
+                if (filters.customEnd && getTehranDateString(eventDate) > filters.customEnd) return false;
             }
+
+            // Currency filter
+            if (filters.currency !== 'all' && event.country !== filters.currency && event.country !== 'All') return false;
+
+            // Impact filter
+            const impact = event.impact || 'Low';
+            if (!filters.impacts[impact]) return false;
+
+            // Search filter
+            if (filters.search && !event.title.toLowerCase().includes(filters.search.toLowerCase())) return false;
+
             return true;
         });
 
-        // Sort by date (upcoming first)
+        // Sort by date ascending
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        return filtered;
+    }
+
+    // === Rendering ===
+    function renderEvents() {
+        const filtered = filterEvents();
+        const now = new Date();
+
+        // Update stats
+        updateStats(filtered);
 
         if (filtered.length === 0) {
             grid.innerHTML = `
                 <div class="empty-state">
                     <div class="icon">📭</div>
-                    <div>هیچ خبری در این دسته یافت نشد.</div>
+                    <div>هیچ رویدادی با این فیلترها یافت نشد</div>
+                    <div style="font-size: 0.85em; opacity: 0.7; margin-top: 5px;">فیلترها را تغییر دهید یا تاریخ دیگری انتخاب کنید</div>
                 </div>
             `;
             return;
         }
 
-        // Current time for comparison
-        const now = new Date();
-
-        // Build HTML
-        grid.innerHTML = filtered.map(event => {
-            // Parse ISO date with timezone (e.g., "2026-08-30T11:15:00-04:00")
+        // Group events by Tehran day
+        const grouped = {};
+        filtered.forEach(event => {
             const eventDate = new Date(event.date);
-            const isPast = eventDate < now;
-            const timeStr = eventDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tehran' });
-            const dateStr = eventDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'Asia/Tehran' });
+            const dayKey = getTehranDateString(eventDate);
+            if (!grouped[dayKey]) grouped[dayKey] = [];
+            grouped[dayKey].push(event);
+        });
 
-            // Relative time indicator
-            const diffMs = eventDate - now;
-            const diffHrs = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60));
-            const diffMins = Math.floor(Math.abs(diffMs) / (1000 * 60));
-            let relativeTime = '';
-            if (diffMs > 0) {
-                // Future
-                if (diffMins < 60) relativeTime = diffMins + ' دقیقه بعد';
-                else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت بعد';
-                else relativeTime = Math.floor(diffHrs / 24) + ' روز بعد';
-            } else {
-                // Past
-                if (diffMins < 60) relativeTime = diffMins + ' دقیقه پیش';
-                else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت پیش';
-                else relativeTime = Math.floor(diffHrs / 24) + ' روز پیش';
-            }
+        // Sort days
+        const sortedDays = Object.keys(grouped).sort();
 
-            // Determine if better/worse than forecast
-            let actualClass = '';
-            if (event.actual && event.forecast) {
-                // Simple comparison for numeric values
-                const actualNum = parseFloat(event.actual.replace(/[^\d.-]/g, ''));
-                const forecastNum = parseFloat(event.forecast.replace(/[^\d.-]/g, ''));
-                if (!isNaN(actualNum) && !isNaN(forecastNum)) {
-                    actualClass = actualNum >= forecastNum ? 'better' : 'worse';
+        let html = '';
+        sortedDays.forEach(dayKey => {
+            const dayDate = new Date(dayKey + 'T12:00:00Z');
+            const tDate = getTehranDate(dayDate);
+            const dayName = persianDays[dayDate.getDay()];
+            const persianDate = toPersianDate(tDate);
+
+            // Day separator
+            let dayLabel = `${dayName} ${persianDate}`;
+            if (isTodayInTehran(dayDate)) dayLabel = `📅 امروز — ${dayLabel}`;
+            else if (isTomorrowInTehran(dayDate)) dayLabel = `📅 فردا — ${dayLabel}`;
+
+            html += `<div class="day-separator">${dayLabel}</div>`;
+
+            // Events for this day
+            grouped[dayKey].forEach(event => {
+                const eventDate = new Date(event.date);
+                const isPast = eventDate < now;
+                const impact = event.impact || 'Low';
+                const impactClass = impact.toLowerCase();
+                const meta = currencyMeta[event.country] || currencyMeta['ALL'];
+                const timeStr = eventDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tehran' });
+                const dateStr = eventDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'Asia/Tehran' });
+
+                // Relative time
+                const diffMs = eventDate - now;
+                const diffHrs = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60));
+                const diffMins = Math.floor(Math.abs(diffMs) / (1000 * 60));
+                let relativeTime = '';
+                if (diffMs > 0) {
+                    if (diffMins < 60) relativeTime = diffMins + ' دقیقه بعد';
+                    else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت بعد';
+                    else relativeTime = Math.floor(diffHrs / 24) + ' روز بعد';
+                } else {
+                    if (diffMins < 60) relativeTime = diffMins + ' دقیقه پیش';
+                    else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت پیش';
+                    else relativeTime = Math.floor(diffHrs / 24) + ' روز پیش';
                 }
-            }
 
-            const impactClass = event.impact ? event.impact.toLowerCase() : 'low';
-            const countryFlag = getCountryFlag(event.country);
-            const impactTranslated = impactText(event.impact);
-            const pastClass = isPast ? 'past' : '';
+                // Actual value class
+                let actualClass = 'neutral';
+                if (event.actual && event.forecast) {
+                    const actualNum = parseFloat(event.actual.replace(/[^\d.-]/g, ''));
+                    const forecastNum = parseFloat(event.forecast.replace(/[^\d.-]/g, ''));
+                    if (!isNaN(actualNum) && !isNaN(forecastNum)) {
+                        actualClass = actualNum >= forecastNum ? 'better' : 'worse';
+                    }
+                }
 
-            return `
-                <div class="news-card ${impactClass} ${pastClass}" onclick="window.open('https://www.forexfactory.com/calendar', '_blank')">
-                    <div class="news-header">
+                const impactText = impact === 'High' ? 'مهم' : impact === 'Medium' ? 'متوسط' : impact === 'Low' ? 'کم' : 'تعطیلی';
+                const flag = meta.flag;
+
+                html += `
+                    <div class="news-card ${impactClass} ${isPast ? 'past' : ''}" onclick="window.open('https://www.forexfactory.com/calendar', '_blank')">
                         <div class="news-time">
                             <div class="time">${timeStr}</div>
                             <div class="date">${dateStr}</div>
@@ -735,57 +1021,126 @@ body::before {
                         <div class="news-content">
                             <div class="news-title">${event.title}</div>
                             <div class="news-meta">
-                                <span class="news-currency">${countryFlag} ${event.country}</span>
-                                <span class="news-impact ${impactClass}">${impactTranslated}</span>
-                                ${event.actual ? `<span class="news-actual ${actualClass}">فعلی: ${event.actual}</span>` : ''}
-                                ${event.forecast ? `<span class="news-forecast">پیش‌بینی: ${event.forecast}</span>` : ''}
-                                ${event.previous ? `<span class="news-forecast">قبلی: ${event.previous}</span>` : ''}
-                                ${isPast ? '<span class="news-past-badge">✓ انجام شد</span>' : ''}
+                                <span class="news-currency" style="--currency-bg:${meta.bg};--currency-text:${meta.text};background:${meta.bg};color:${meta.text}">${flag} ${event.country}</span>
+                                <span class="news-impact ${impactClass}">${impactText}</span>
+                                ${event.actual ? `<span class="news-value actual ${actualClass}">فعلی: ${event.actual}</span>` : ''}
+                                ${event.forecast ? `<span class="news-value forecast">پیش‌بینی: ${event.forecast}</span>` : ''}
+                                ${event.previous ? `<span class="news-value previous">قبلی: ${event.previous}</span>` : ''}
+                                ${isPast && event.actual ? '<span class="news-past-badge">✓ انجام شد</span>' : ''}
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }).join('');
+                `;
+            });
+        });
+
+        grid.innerHTML = html;
     }
 
-    function getCountryFlag(country) {
-        const flags = {
-            'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 'JPY': '🇯🇵',
-            'AUD': '🇦🇺', 'NZD': '🇳🇿', 'CAD': '🇨🇦', 'CHF': '🇨🇭',
-            'CNY': '🇨🇳', 'GER': '🇩🇪', 'FRA': '🇫🇷', 'ITA': '🇮🇹',
-            'ESP': '🇪🇸', 'ALL': '🌍', 'ZAR': '🇿🇦', 'BRL': '🇧🇷',
-            'INR': '🇮🇳', 'RUB': '🇷🇺', 'TRY': '🇹🇷', 'KRW': '🇰🇷',
-            'MXN': '🇲🇽', 'SGD': '🇸🇬', 'HKD': '🇭🇰'
-        };
-        return flags[country] || '🌐';
+    function updateStats(events) {
+        const stats = { total: events.length, high: 0, medium: 0, low: 0 };
+        events.forEach(e => {
+            const impact = e.impact || 'Low';
+            if (impact === 'High') stats.high++;
+            else if (impact === 'Medium') stats.medium++;
+            else if (impact === 'Low') stats.low++;
+        });
+        document.getElementById('statTotal').textContent = stats.total;
+        document.getElementById('statHigh').textContent = stats.high;
+        document.getElementById('statMedium').textContent = stats.medium;
+        document.getElementById('statLow').textContent = stats.low;
     }
 
-    function impactText(impact) {
-        const texts = { 'High': 'مهم', 'Medium': 'متوسط', 'Low': 'کم' };
-        return texts[impact] || impact;
+    // Convert Gregorian to Persian (Jalali) date
+    function toPersianDate(tDate) {
+        // Use Intl to get Persian calendar date
+        const date = new Date(tDate.year, tDate.month - 1, tDate.day);
+        const persianStr = date.toLocaleDateString('fa-IR', { day: 'numeric', month: 'long' });
+        return persianStr;
     }
 
-    // Tab click handlers
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            currentFilter = tab.dataset.filter;
+    // === Event listeners ===
+    // Date pills
+    document.querySelectorAll('.date-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+            document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            filters.date = pill.dataset.date;
+            // Show/hide custom date picker
+            const customDateEl = document.getElementById('customDate');
+            if (filters.date === 'custom') {
+                customDateEl.classList.add('visible');
+                // Default: this week
+                const today = new Date();
+                const week = new Date(today);
+                week.setDate(today.getDate() + 7);
+                document.getElementById('customDateStart').value = getTehranDateString(today);
+                document.getElementById('customDateEnd').value = getTehranDateString(week);
+            } else {
+                customDateEl.classList.remove('visible');
+            }
             renderEvents();
         });
     });
 
-    // Load on page open
+    // Custom date inputs
+    ['customDateStart', 'customDateEnd'].forEach(id => {
+        document.getElementById(id).addEventListener('change', (e) => {
+            filters.customStart = document.getElementById('customDateStart').value;
+            filters.customEnd = document.getElementById('customDateEnd').value;
+            renderEvents();
+        });
+    });
+
+    // Currency chips
+    document.querySelectorAll('.currency-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.currency-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            filters.currency = chip.dataset.currency;
+            renderEvents();
+        });
+    });
+
+    // Impact chips (multi-select)
+    document.querySelectorAll('.impact-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            chip.classList.toggle('active');
+            const impact = chip.dataset.impact;
+            filters.impacts[impact] = chip.classList.contains('active');
+            renderEvents();
+        });
+    });
+
+    // Search box
+    let searchTimer;
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            filters.search = e.target.value.trim();
+            renderEvents();
+        }, 300);
+    });
+
+    // === Initialize ===
+    // Set default custom dates
+    const today = new Date();
+    const weekLater = new Date();
+    weekLater.setDate(today.getDate() + 7);
+    document.getElementById('customDateStart').value = getTehranDateString(today);
+    document.getElementById('customDateEnd').value = getTehranDateString(weekLater);
+
+    // Load events
     loadEvents();
 
-    // Auto-refresh every 1 minute for live updates
-    setInterval(loadEvents, 60 * 1000);
+    // Auto-refresh every 2 minutes
+    setInterval(loadEvents, 2 * 60 * 1000);
 
-    // Update "last updated" time every 10 seconds (relative display)
+    // Update "last updated" every 30 seconds
     setInterval(() => {
         if (allEvents.length > 0) updateLastUpdated();
-    }, 10 * 1000);
+    }, 30 * 1000);
+
 })();
 </script>
 
