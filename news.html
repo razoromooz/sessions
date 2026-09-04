@@ -145,6 +145,13 @@ body::before {
     margin-top: 8px;
 }
 
+.updated-time {
+    margin-top: 6px;
+    font-size: 0.72em;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
 .live-dot {
     width: 8px;
     height: 8px;
@@ -258,10 +265,31 @@ body::before {
     direction: ltr;
 }
 
+.news-time .relative {
+    font-size: 0.66em;
+    color: #c4b5fd;
+    font-weight: 700;
+    margin-top: 2px;
+    direction: rtl;
+}
+
 .news-content {
     flex: 1;
     min-width: 0;
 }
+
+.news-past-badge {
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88em;
+}
+
+/* Past events — dimmed */
+.news-card.past { opacity: 0.6; }
+.news-card.past:hover { opacity: 1; }
 
 .news-title {
     font-size: 0.98em;
@@ -414,6 +442,30 @@ body::before {
     .tab { padding: 6px 14px; font-size: 0.8em; }
     .sources-grid { grid-template-columns: 1fr; }
 }
+
+/* TradingView widget section */
+.tv-widget-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px dashed rgba(255,255,255,0.1);
+}
+
+.tv-widget-container {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 12px;
+    overflow: hidden;
+}
+
+.tv-widget-container .tradingview-widget-container {
+    min-height: 500px;
+}
+
+.tv-widget-container iframe {
+    border-radius: 12px;
+    width: 100% !important;
+}
 </style>
 </head>
 <body>
@@ -428,18 +480,40 @@ body::before {
             <span class="live-dot"></span>
             زنده
         </div>
+        <div class="updated-time" id="updatedTime"></div>
     </div>
 
     <div class="tabs" id="tabs">
-        <div class="tab active" data-filter="all">📋 همه</div>
+        <div class="tab active" data-filter="upcoming">⏳ پیش رو</div>
+        <div class="tab" data-filter="today">📅 امروز</div>
         <div class="tab" data-filter="high">🔴 مهم</div>
         <div class="tab" data-filter="medium">🟡 متوسط</div>
         <div class="tab" data-filter="low">🟢 کم</div>
-        <div class="tab" data-filter="today">📅 امروز</div>
+        <div class="tab" data-filter="all">📋 همه</div>
     </div>
 
     <div class="news-grid" id="newsGrid">
         <div class="loading">در حال بارگذاری اخبار</div>
+    </div>
+
+    <!-- Fallback: TradingView economic calendar widget (always loads) -->
+    <div class="tv-widget-section">
+        <h2 class="sources-title">📈 تقویم اقتصادی زنده</h2>
+        <div class="tv-widget-container">
+            <!-- TradingView Economic Calendar Widget -->
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                {
+                "colorTheme": "dark",
+                "isTransparent": true,
+                "locale": "fa_IR",
+                "width": "100%",
+                "height": "500"
+                }
+                </script>
+            </div>
+        </div>
     </div>
 
     <div class="sources-section">
@@ -504,42 +578,65 @@ body::before {
     const grid = document.getElementById('newsGrid');
     const tabs = document.querySelectorAll('.tab');
     let allEvents = [];
-    let currentFilter = 'all';
+    let currentFilter = 'upcoming';
 
     // ForexFactory calendar JSON (free public endpoint)
     // This returns the events for the current week
     const FF_URL = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
 
     async function loadEvents() {
+        const updatedTimeEl = document.getElementById('updatedTime');
+        updatedTimeEl.textContent = '⏳ در حال دریافت اخبار زنده...';
+
         try {
-            // Fetch with proper User-Agent header (some APIs require it)
-            const response = await fetch(FF_URL, {
+            // Fetch with cache-busting to always get fresh data
+            const url = FF_URL + '?_t=' + Date.now();
+            const response = await fetch(url, {
                 headers: { 'Accept': 'application/json' }
             });
-            if (!response.ok) throw new Error('Failed to load news');
+            if (!response.ok) throw new Error('HTTP ' + response.status);
             const data = await response.json();
+
+            // Validate that we got real data (not empty)
+            if (!Array.isArray(data) || data.length === 0) {
+                throw new Error('Empty response');
+            }
+
             allEvents = data;
+            updateLastUpdated();
             renderEvents();
         } catch (error) {
             console.error('Error loading news:', error);
-            // Fallback: show sample data and external links
-            allEvents = getSampleEvents();
-            renderEvents();
+
+            // Don't show fake sample data — show a clear error message
+            allEvents = [];
+            updatedTimeEl.innerHTML = '⚠️ دریافت اخبار زنده ناموفق بود. <a href="#" onclick="loadEvents(); return false;" style="color: #c4b5fd; text-decoration: underline;">تلاش مجدد</a> یا <a href="https://www.forexfactory.com/calendar" target="_blank" style="color: #c4b5fd; text-decoration: underline;">مشاهده تقویم کامل</a>';
+
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">📡</div>
+                    <div style="margin-bottom: 12px; font-size: 1em;">دریافت اخبار از منبع ناموفق بود</div>
+                    <div style="font-size: 0.85em; opacity: 0.7; margin-bottom: 16px;">
+                        ممکن است به دلیل محدودیت شبکه یا فایروال باشد.<br>
+                        لطفاً بعداً تلاش کنید یا از منابع زیر استفاده کنید:
+                    </div>
+                    <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="source-card" style="display: inline-flex; max-width: 300px; margin: 0 auto;">
+                        <span class="source-icon">📅</span>
+                        <div class="source-info">
+                            <div class="source-name">Forex Factory Calendar</div>
+                            <div class="source-desc">مشاهده تقویم اقتصادی کامل</div>
+                        </div>
+                    </a>
+                </div>
+            `;
         }
     }
 
-    function getSampleEvents() {
-        // Sample fallback data (used if API fails)
-        const today = new Date();
-        const isoDate = today.toISOString().split('T')[0];
-        return [
-            { title: "Non-Farm Payrolls", country: "USD", impact: "High", actual: "256K", forecast: "180K", previous: "216K", date: isoDate + "T13:30:00-04:00" },
-            { title: "Unemployment Rate", country: "USD", impact: "High", actual: "3.7%", forecast: "3.8%", previous: "3.7%", date: isoDate + "T13:30:00-04:00" },
-            { title: "ECB Interest Rate Decision", country: "EUR", impact: "High", actual: "4.25%", forecast: "4.25%", previous: "4.50%", date: isoDate + "T11:45:00-04:00" },
-            { title: "GDP Growth Rate (QoQ)", country: "GBP", impact: "Medium", actual: "0.4%", forecast: "0.2%", previous: "-0.3%", date: isoDate + "T06:00:00-04:00" },
-            { title: "Consumer Price Index (YoY)", country: "EUR", impact: "High", actual: "2.4%", forecast: "2.5%", previous: "2.6%", date: isoDate + "T09:00:00-04:00" },
-            { title: "Crude Oil Inventories", country: "USD", impact: "Low", actual: "-3.7M", forecast: "-2.5M", previous: "-1.2M", date: isoDate + "T14:30:00-04:00" }
-        ];
+    function updateLastUpdated() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tehran' });
+        const dateStr = now.toLocaleDateString('fa-IR', { timeZone: 'Asia/Tehran' });
+        document.getElementById('updatedTime').textContent = `آخرین به‌روزرسانی: ${dateStr} - ${timeStr}`;
     }
 
     function renderEvents() {
@@ -555,15 +652,17 @@ body::before {
 
         // Filter events
         let filtered = allEvents.filter(event => {
+            const eventDate = new Date(event.date);
             if (currentFilter === 'all') return true;
+            if (currentFilter === 'upcoming') return eventDate >= new Date();
             if (currentFilter === 'high') return event.impact === 'High';
             if (currentFilter === 'medium') return event.impact === 'Medium';
             if (currentFilter === 'low') return event.impact === 'Low';
             if (currentFilter === 'today') {
                 // Today in Tehran timezone
                 const today = new Date().toLocaleDateString('en-GB', { timeZone: 'Asia/Tehran' });
-                const eventDate = new Date(event.date).toLocaleDateString('en-GB', { timeZone: 'Asia/Tehran' });
-                return today === eventDate;
+                const eventDateTehran = new Date(event.date).toLocaleDateString('en-GB', { timeZone: 'Asia/Tehran' });
+                return today === eventDateTehran;
             }
             return true;
         });
@@ -581,12 +680,33 @@ body::before {
             return;
         }
 
+        // Current time for comparison
+        const now = new Date();
+
         // Build HTML
         grid.innerHTML = filtered.map(event => {
             // Parse ISO date with timezone (e.g., "2026-08-30T11:15:00-04:00")
             const eventDate = new Date(event.date);
+            const isPast = eventDate < now;
             const timeStr = eventDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Tehran' });
             const dateStr = eventDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'Asia/Tehran' });
+
+            // Relative time indicator
+            const diffMs = eventDate - now;
+            const diffHrs = Math.floor(Math.abs(diffMs) / (1000 * 60 * 60));
+            const diffMins = Math.floor(Math.abs(diffMs) / (1000 * 60));
+            let relativeTime = '';
+            if (diffMs > 0) {
+                // Future
+                if (diffMins < 60) relativeTime = diffMins + ' دقیقه بعد';
+                else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت بعد';
+                else relativeTime = Math.floor(diffHrs / 24) + ' روز بعد';
+            } else {
+                // Past
+                if (diffMins < 60) relativeTime = diffMins + ' دقیقه پیش';
+                else if (diffHrs < 24) relativeTime = diffHrs + ' ساعت پیش';
+                else relativeTime = Math.floor(diffHrs / 24) + ' روز پیش';
+            }
 
             // Determine if better/worse than forecast
             let actualClass = '';
@@ -602,13 +722,15 @@ body::before {
             const impactClass = event.impact ? event.impact.toLowerCase() : 'low';
             const countryFlag = getCountryFlag(event.country);
             const impactTranslated = impactText(event.impact);
+            const pastClass = isPast ? 'past' : '';
 
             return `
-                <div class="news-card ${impactClass}" onclick="window.open('https://www.forexfactory.com/calendar', '_blank')">
+                <div class="news-card ${impactClass} ${pastClass}" onclick="window.open('https://www.forexfactory.com/calendar', '_blank')">
                     <div class="news-header">
                         <div class="news-time">
                             <div class="time">${timeStr}</div>
                             <div class="date">${dateStr}</div>
+                            <div class="relative">${relativeTime}</div>
                         </div>
                         <div class="news-content">
                             <div class="news-title">${event.title}</div>
@@ -618,6 +740,7 @@ body::before {
                                 ${event.actual ? `<span class="news-actual ${actualClass}">فعلی: ${event.actual}</span>` : ''}
                                 ${event.forecast ? `<span class="news-forecast">پیش‌بینی: ${event.forecast}</span>` : ''}
                                 ${event.previous ? `<span class="news-forecast">قبلی: ${event.previous}</span>` : ''}
+                                ${isPast ? '<span class="news-past-badge">✓ انجام شد</span>' : ''}
                             </div>
                         </div>
                     </div>
@@ -656,8 +779,13 @@ body::before {
     // Load on page open
     loadEvents();
 
-    // Auto-refresh every 5 minutes
-    setInterval(loadEvents, 5 * 60 * 1000);
+    // Auto-refresh every 1 minute for live updates
+    setInterval(loadEvents, 60 * 1000);
+
+    // Update "last updated" time every 10 seconds (relative display)
+    setInterval(() => {
+        if (allEvents.length > 0) updateLastUpdated();
+    }, 10 * 1000);
 })();
 </script>
 
