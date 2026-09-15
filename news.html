@@ -652,6 +652,17 @@
             box-shadow: 0 0 0 1px var(--accent-primary);
         }
 
+
+        /* FIXED: styling for weekend pills (Sat/Sun - market closed) */
+        .weekday-pill[data-day="Sat"], .weekday-pill[data-day="Sun"] {
+            opacity: 0.72;
+            border-style: dashed;
+        }
+        .weekday-pill[data-day="Sat"].active, .weekday-pill[data-day="Sun"].active {
+            opacity: 1;
+            border-style: solid;
+        }
+
         .shortcut-tip {
             font-size: 0.68rem;
             color: var(--text-muted);
@@ -1724,7 +1735,7 @@
             <div class="filter-tier-1">
                 <div class="date-presets-group">
                     <button class="date-pill" data-date-filter="yesterday" onclick="setDateFilter('yesterday')">دیروز</button>
-                    <button class="date-pill active" data-date-filter="today" onclick="setDateFilter('today')">امروز (جمعه)</button>
+                    <button class="date-pill active" data-date-filter="today" onclick="setDateFilter('today')">امروز (سه‌شنبه)</button>
                     <button class="date-pill" data-date-filter="tomorrow" onclick="setDateFilter('tomorrow')">فردا</button>
                     <button class="date-pill" data-date-filter="this_week" onclick="setDateFilter('this_week')">کل این هفته</button>
                     <button class="date-pill" data-date-filter="next_week" onclick="setDateFilter('next_week')">هفته آینده</button>
@@ -1757,15 +1768,17 @@
                 </div>
             </div>
 
-            <!-- Tier 2: Days of the Week Filter Buttons -->
+            <!-- Tier 2: Days of the Week Filter Buttons -- FIXED: dynamic 7-day rendering, correct today handling -->
             <div class="filter-tier-2-weekdays">
-                <div class="weekdays-group">
+                <div class="weekdays-group" id="weekdaysGroup">
                     <span class="weekdays-label">روزهای هفته:</span>
+                    <button class="weekday-pill" data-day="Sat" onclick="selectDayOfWeek('Sat')">شنبه</button>
+                    <button class="weekday-pill" data-day="Sun" onclick="selectDayOfWeek('Sun')">یکشنبه</button>
                     <button class="weekday-pill" data-day="Mon" onclick="selectDayOfWeek('Mon')">دوشنبه</button>
-                    <button class="weekday-pill" data-day="Tue" onclick="selectDayOfWeek('Tue')">سه‌شنبه</button>
+                    <button class="weekday-pill active" data-day="Tue" onclick="selectDayOfWeek('Tue')">سه‌شنبه (امروز)</button>
                     <button class="weekday-pill" data-day="Wed" onclick="selectDayOfWeek('Wed')">چهارشنبه</button>
                     <button class="weekday-pill" data-day="Thu" onclick="selectDayOfWeek('Thu')">پنج‌شنبه</button>
-                    <button class="weekday-pill active" data-day="Fri" onclick="selectDayOfWeek('Fri')">جمعه (امروز)</button>
+                    <button class="weekday-pill" data-day="Fri" onclick="selectDayOfWeek('Fri')">جمعه</button>
                 </div>
 
                 <div class="shortcut-tip">
@@ -2080,5 +2093,121 @@ document.getElementById('fxpro-back').addEventListener('click',function(e){
   location.href='index.html';
 });
 </script>
-</body>
+
+<!-- ============================================================
+     FIX V2: نمایش صحیح ایام هفته — پویاسازی بر اساس timezone و تاریخ واقعی
+     مشکل: فیلتر روزهای هفته به صورت ایستا (Mon-Fri) و با برچسب ثابت "جمعه (امروز)" ذخیره شده بود.
+     برای همین در تاریخ 2026-09-15 (سه‌شنبه) همچنان "جمعه" به عنوان امروز نمایش داده می‌شد و شنبه/یکشنبه وجود نداشت.
+     ============================================================ -->
+<script>
+(function(){
+  'use strict';
+  const PERSIAN = {
+    Sat: "شنبه", Sun: "یکشنبه", Mon: "دوشنبه", Tue: "سه‌شنبه",
+    Wed: "چهارشنبه", Thu: "پنج‌شنبه", Fri: "جمعه"
+  };
+  const ORDER = ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"]; // شنبه -> جمعه
+
+  function getTodayShort(){
+    try{
+      const tz = (typeof resolvedTimezone !== 'undefined' && resolvedTimezone) || (typeof detectedSystemTimezone !== 'undefined' && detectedSystemTimezone) || Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tehran';
+      return new Date().toLocaleDateString('en-US', {weekday:'short', timeZone: tz});
+    }catch(e){ return new Date().toLocaleDateString('en-US', {weekday:'short'}); }
+  }
+
+  let isFirstRun = true;
+
+  function refresh(){
+    const group = document.getElementById('weekdaysGroup') || document.querySelector('.weekdays-group');
+    const datePillToday = document.querySelector('.date-pill[data-date-filter="today"]');
+    if(!group) return;
+    const today = getTodayShort(); // e.g. "Tue"
+    const todayFa = PERSIAN[today] || today;
+
+    // تشخیص active فعلی از DOM (چون متغیر let در scope سراسری window نیست)
+    let previousActiveEl = group.querySelector('.weekday-pill.active') || document.querySelector('.weekday-pill.active');
+    let previousActive = previousActiveEl ? previousActiveEl.getAttribute('data-day') : null;
+
+    let active;
+    if(isFirstRun){
+      // در اولین بار، اگر مقدار قبلی stale است (مثلاً جمعه در حالی که امروز سه‌شنبه است) آن را با امروز جایگزین کن
+      // همچنین اگر active از قبل null بود، امروز را فعال کن تا فیلتر با "امروز" همگام باشد
+      const isStale = previousActive && previousActive !== today && (previousActive === 'Fri' || previousActive === 'Mon');
+      if(!previousActive || isStale){
+        active = today;
+        // همچنین متغیر داخلی activeDayOfWeek را اگر در دسترس بود همگام کن
+        try{ if(typeof activeDayOfWeek !== 'undefined') activeDayOfWeek = today; }catch(_){}
+        // اگر تابع selectDayOfWeek وجود دارد، صدا نزن چون فیلتر را بهم می‌ریزد؛ فقط UI را به‌روز می‌کنیم
+      } else {
+        active = previousActive;
+      }
+      isFirstRun = false;
+    } else {
+      // در دفعات بعد، انتخاب کاربر را حفظ کن
+      active = previousActive;
+    }
+
+    // بازسازی
+    group.innerHTML = '<span class="weekdays-label">روزهای هفته:</span>';
+    ORDER.forEach(function(day){
+      const fa = PERSIAN[day];
+      const isToday = day === today;
+      const isActive = active === day;
+      const isWeekend = (day==='Sat' || day==='Sun');
+      const btn = document.createElement('button');
+      btn.className = 'weekday-pill' + (isActive ? ' active' : '');
+      btn.setAttribute('data-day', day);
+      btn.textContent = fa + (isToday ? ' (امروز)' : '');
+      btn.title = isWeekend ? 'آخر هفته — بازار فارکس تعطیل (رویداد اقتصادی ندارد)' : fa + (isToday?' — امروز':'');
+      if(isWeekend) btn.style.opacity = '0.72';
+      btn.addEventListener('click', function(){ if(typeof selectDayOfWeek==='function') selectDayOfWeek(day); });
+      group.appendChild(btn);
+    });
+
+    if(datePillToday){
+      datePillToday.textContent = 'امروز (' + todayFa + ')';
+    }
+
+    // Patch کردن updateDayOfWeekUI فقط یک‌بار
+    if(typeof window.updateDayOfWeekUI === 'function' && !window.__weekdayPatched){
+      window.__weekdayPatched = true;
+      window.updateDayOfWeekUI = function(day){
+        document.querySelectorAll('.weekday-pill').forEach(function(el){
+          const d = el.getAttribute('data-day');
+          const isActive = d === day;
+          el.classList.toggle('active', isActive);
+          const base = PERSIAN[d] || d;
+          const isToday = d === getTodayShort();
+          el.textContent = base + (isToday ? ' (امروز)' : '');
+        });
+      };
+      if(active) window.updateDayOfWeekUI(active);
+    }
+  }
+
+  function init(){
+    // کمی تاخیر تا اسکریپت obfuscated مقدار اولیه را ست کند
+    setTimeout(refresh, 250);
+    setTimeout(refresh, 900);
+    const sel = document.getElementById('timezoneSelect');
+    if(sel) sel.addEventListener('change', function(){ setTimeout(refresh, 400); });
+    if(typeof window.updateActiveTimezoneResolved === 'function' && !window.__tzPatched){
+      window.__tzPatched = true;
+      const origTZ = window.updateActiveTimezoneResolved;
+      window.updateActiveTimezoneResolved = function(){
+        const r = origTZ.apply(this, arguments);
+        setTimeout(refresh, 150);
+        return r;
+      };
+    }
+    setInterval(refresh, 60000);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  window.__refreshWeekdays = refresh;
+})();
+</script>
+
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b635c0395dd0a6',t:'MTc4OTQ2MDQwMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
